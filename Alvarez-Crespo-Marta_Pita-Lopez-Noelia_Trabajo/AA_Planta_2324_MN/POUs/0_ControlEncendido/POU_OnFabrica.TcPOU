@@ -13,13 +13,18 @@ GVL_General.sBeltConveyor.bSortingCintaDistribucion := TRUE;
 GVL_General.sBeltConveyor.bCintaAzul2 := TRUE;
 GVL_General.sBeltConveyor.bCintaVerde2 := TRUE;
 GVL_General.sBeltConveyor.bCintaMetal2 := TRUE;
-]]></ST>
+
+GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := TRUE;
+GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := TRUE;
+GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;]]></ST>
     </Implementation>
     <LineIds Name="POU_OnFabrica">
       <LineId Id="64" Count="2" />
       <LineId Id="71" Count="2" />
       <LineId Id="63" Count="0" />
+      <LineId Id="77" Count="0" />
       <LineId Id="41" Count="0" />
+      <LineId Id="78" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

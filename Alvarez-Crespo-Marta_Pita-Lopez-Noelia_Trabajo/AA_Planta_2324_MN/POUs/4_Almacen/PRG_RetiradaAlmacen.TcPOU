@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_RetiradaAlmacen" Id="{3c072e24-b3a5-4d0d-b488-8a342df77b82}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_RetiradaAlmacen
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_RetiradaAlmacen">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

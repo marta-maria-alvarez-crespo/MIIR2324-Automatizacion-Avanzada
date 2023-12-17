@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="POU_FinCiclo" Id="{ab9f36f9-436f-48b2-9b82-041621a366da}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM POU_FinCiclo
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF PRG_Almacen.iGuardandoCaja > 0 THEN
+	PRG_Almacen();
+	IF PRG_Turntable.iCajaProcesando > 0 THEN
+		PRG_TurnTable();
+		IF 
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="POU_FinCiclo">
+      <LineId Id="6" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -82,6 +82,9 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\0_ControlEncendido\POU_FinCiclo.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\0_ControlEncendido\POU_FinDeCiclo.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -107,6 +110,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Almacen\PRG_Almacen.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\4_Almacen\PRG_RetiradaAlmacen.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\6_Contadores\POU_Contadores.TcPOU">

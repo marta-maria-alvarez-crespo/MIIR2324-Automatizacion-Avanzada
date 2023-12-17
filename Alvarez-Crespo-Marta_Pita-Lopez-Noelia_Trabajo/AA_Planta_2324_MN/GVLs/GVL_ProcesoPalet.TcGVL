@@ -14,7 +14,7 @@ VAR_GLOBAL
 	{attribute 'OPC.UA.DA' := '1'}
 	bDiffuseSensorPaletM	:BOOL;
 	{attribute 'OPC.UA.DA' := '1'}	
-	bVisionSensorSalida		:DINT;
+	bDiffuseSensorSalida		:BOOL;
 	
 	{attribute 'OPC.UA.DA' := '1'}
 	iLightArrayEmitterA		:BOOL;

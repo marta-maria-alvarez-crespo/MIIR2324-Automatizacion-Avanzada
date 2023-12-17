@@ -22,31 +22,28 @@ Máster Universitario en Informática Industrial y Robótica
 	Marta María Álvarez Crespo - Noelia Pita López  		
 *)
 
-PRG_LlenadoCajas();
+
 POU_StopBladePyP();
 POU_Contadores();
-PRG_Turntable();
-PRG_Almacen();
 
 IF GVL_General.bMarcha THEN
 	bON := TRUE;
 END_IF
 
 IF GVL_General.bParo THEN
-	bOFF := TRUE;
+	bON := FALSE;
+	POU_FinDeCiclo();
 END_IF
 
-IF bON AND NOT bOFF AND GVL_General.bSetaEmergencia THEN
+IF bON AND GVL_General.bSetaEmergencia THEN
 	POU_OnFabrica();
 	POU_ProcesoEntrada();
 	POU_PickAndPlace();
 	POU_PositionerAzul();
 	POU_Parada();
-END_IF
-
-IF bOFF THEN
-	POU_FinDeCiclo();
-	bON := FALSE;
+	PRG_Turntable();
+	PRG_Almacen();
+	PRG_LlenadoCajas();
 END_IF
 
 IF NOT GVL_General.bSetaEmergencia THEN
@@ -133,9 +130,12 @@ END_IF
       <LineId Id="786" Count="0" />
       <LineId Id="535" Count="0" />
       <LineId Id="841" Count="0" />
-      <LineId Id="848" Count="0" />
-      <LineId Id="855" Count="0" />
-      <LineId Id="536" Count="28" />
+      <LineId Id="536" Count="6" />
+      <LineId Id="861" Count="0" />
+      <LineId Id="543" Count="7" />
+      <LineId Id="863" Count="2" />
+      <LineId Id="551" Count="0" />
+      <LineId Id="557" Count="7" />
       <LineId Id="776" Count="4" />
       <LineId Id="565" Count="1" />
       <LineId Id="787" Count="50" />

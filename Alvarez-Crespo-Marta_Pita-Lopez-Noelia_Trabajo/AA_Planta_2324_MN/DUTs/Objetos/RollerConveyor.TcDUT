@@ -20,7 +20,6 @@ STRUCT
 	bRollerAlmacen1		 : BOOL;
 	bCurvedRollerAlmacen : BOOL;
 	bRollerAlmacen2		 : BOOL;
-	bRollerCargaAlmacen  : BOOL;
 	
 END_STRUCT
 END_TYPE

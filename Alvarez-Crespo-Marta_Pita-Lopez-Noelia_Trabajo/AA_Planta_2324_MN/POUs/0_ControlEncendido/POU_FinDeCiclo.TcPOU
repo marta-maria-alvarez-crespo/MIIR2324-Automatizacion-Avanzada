@@ -24,7 +24,10 @@ CASE CONDICIONESPARO OF
 	POU_PickAndPlace();
 	POU_PositionerAzul();
 	POU_Parada();
-	//POUS DE NOELIA
+	PRG_LlenadoCajas();
+	PRG_Turntable();
+	PRG_Almacen();
+	
 	
 	IF Main.bOFF THEN
 		GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
@@ -149,6 +152,8 @@ END_CASE
       <LineId Id="985" Count="0" />
       <LineId Id="818" Count="15" />
       <LineId Id="961" Count="0" />
+      <LineId Id="992" Count="1" />
+      <LineId Id="990" Count="0" />
       <LineId Id="834" Count="1" />
       <LineId Id="979" Count="1" />
       <LineId Id="836" Count="2" />
