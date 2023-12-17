@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="POU_FinDeCiclo" Id="{d63d9367-255f-4c24-a9b7-23ae1156f199}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM POU_FinDeCiclo
+VAR
+	CONDICIONESPARO: CONDICIONESPARO;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// SELECCIÓN DEL CASE DE PARO
+(* Se van apagando las estaciones a medida que las variables de control llegan a 0 -> Dejo de llamar pous progresivamente *)
+
+(* Cuando el operario pulsa fin de ciclo, se deja de ejecutar el bON de Main, saltando únicamente a este POU que controla el apagado 
+progresivo de los diferentes POUs *)
+
+CASE CONDICIONESPARO OF
+
+	CONDICIONESPARO_ESPERA:
+	(* Este estado es en el que se encuentra esperando el POU mientras todo está trabajando. Todas las estaciones siguen operativas *)
+	
+	POU_OnFabrica();
+	POU_ProcesoEntrada();
+	POU_PickAndPlace();
+	POU_PositionerAzul();
+	POU_Parada();
+	//POUS DE NOELIA
+	
+	IF Main.bOFF THEN
+		GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
+		GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;	
+		CONDICIONESPARO := CONDICIONESPARO_SELECCION;
+	END_IF
+		
+	CONDICIONESPARO_SELECCION:
+	(* Aquí compruebo en qué caso estamos de todas las posibilidades *)
+	
+  	IF (*[Var de Noelia para el almacen] = 0 AND [VAR de Noe Selector] = 0 AND *) POU_Contadores.iStackBoxProcesando = 0 AND POU_Contadores.iCintaProcesando = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_FINPROCESO;	
+ 	ELSIF (*[VAR de Noe Almacen] > 0 AND ([VAR de Noe Selector] = 0 AND *)POU_Contadores.iStackBoxProcesando = 0 AND POU_Contadores.iCintaProcesando = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_ALMACEN;
+	ELSIF (*[Var de Noe Selector] > 0 AND*) POU_Contadores.iStackBoxProcesando = 0 AND POU_Contadores.iCintaProcesando = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_SELECTOR;
+	ELSIF POU_Contadores.iStackBoxProcesando > 0 AND POU_Contadores.iCintaProcesando = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_GUARDADO;
+	ELSIF POU_Contadores.iCintaProcesando > 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_CINTAINICIAL;
+	END_IF	
+	
+	
+	CONDICIONESPARO_FINPROCESO:
+	(* Si el Operario pulsa el botón y se cumple que no hay nada en proceso, entramos en el Case 1, donde se apagan las cintas (normalmente 
+	encendidas) y se dejan de llamar a los POUs *)
+	
+	GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := FALSE;
+	
+	GVL_General.sBeltConveyor.bCintaAzul1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde1	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaAzul2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal2 	:= FALSE;
+	
+	IF Main.bON THEN
+		CONDICIONESPARO := CONDICIONESPARO_ESPERA;
+	END_IF
+	
+	
+		
+	CONDICIONESPARO_ALMACEN:
+	(* Solo está trabajando el almacén *)
+	
+	// [POU_NOELIA_ALMACEN();]
+	
+	GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := FALSE;
+	
+	GVL_General.sBeltConveyor.bCintaAzul1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde1	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaAzul2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal2 	:= FALSE;
+	
+	(* IF [VAR de Noe Almacen] = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_SELECCION;
+	*)
+		
+	CONDICIONESPARO_SELECTOR: 
+	(* Si está trabajando el selector y las dos estaciones anteriores NO *)
+	
+	GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := FALSE;
+	
+	GVL_General.sBeltConveyor.bCintaAzul1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde1	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaAzul2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal2 	:= FALSE;
+	
+	//POU_NOELIA_PALLETSELECTOR();
+	//POU_NOELIA_ALMACEN();
+	
+ (* IF  [Var de Noe Selector] = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_SELECCION;
+	END_IF *)	
+	
+	CONDICIONESPARO_GUARDADO:
+	(* Si está trabajando el proceso de llenado de cajas y la estación anterior NO *)
+	
+	GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := FALSE;
+	
+	POU_PickAndPlace();
+	POU_PositionerAzul();
+	POU_Parada();
+	//POU_NOELIA_PALLETSELECTOR();
+	//POU_NOELIA_ALMACEN();
+	
+	IF  POU_Contadores.iStackBoxProcesando = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_SELECCION;
+	END_IF 	
+	
+	CONDICIONESPARO_CINTAINICIAL:
+	(* Si está trabajando la cinta inicial *)
+	
+	POU_OnFabrica();
+	POU_ProcesoEntrada();
+	POU_PickAndPlace();
+	POU_PositionerAzul();
+	POU_Parada();
+	//POU_NOELIA_PALLETSELECTOR();
+	//POU_NOELIA_ALMACEN();	
+	
+	IF  POU_Contadores.iCintaProcesando = 0 THEN
+		CONDICIONESPARO := CONDICIONESPARO_SELECCION;
+	END_IF 	
+	
+END_CASE
+]]></ST>
+    </Implementation>
+    <LineIds Name="POU_FinDeCiclo">
+      <LineId Id="985" Count="0" />
+      <LineId Id="818" Count="15" />
+      <LineId Id="961" Count="0" />
+      <LineId Id="834" Count="1" />
+      <LineId Id="979" Count="1" />
+      <LineId Id="836" Count="2" />
+      <LineId Id="965" Count="13" />
+      <LineId Id="963" Count="1" />
+      <LineId Id="839" Count="18" />
+      <LineId Id="872" Count="75" />
+      <LineId Id="87" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

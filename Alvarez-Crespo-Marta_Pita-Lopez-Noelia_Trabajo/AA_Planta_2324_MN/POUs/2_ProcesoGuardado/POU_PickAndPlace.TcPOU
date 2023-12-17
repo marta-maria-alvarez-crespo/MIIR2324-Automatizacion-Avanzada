@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="POU_PickAndPlace" Id="{9cb31875-bf7a-4a27-9154-1aec5abe823d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM POU_PickAndPlace
+VAR
+(* =============================================================================================== *)
+(*                                CONTROL DE LOS PICK-AND-PLACE                                    *)
+(* =============================================================================================== *)
+
+// PIEZAS AZULES	
+	PickAndPlaceA: FB_PickAndPlace;
+	
+	RobotSeMueveA: BOOL;
+	iContadorPyPA: INT;
+	CajaLlenaA: BOOL;
+	
+// PIEZAS VERDES
+	PickAndPlaceV: FB_PickAndPlace;
+	
+	RobotSeMueveV: BOOL;
+	iContadorPyPV: INT;
+	CajaLlenaV: BOOL;
+	
+// PIEZAS METAL
+	PickAndPlaceM: FB_PickAndPlace;
+	
+	RobotSeMueveM: BOOL;
+	iContadorPyPM: INT;
+	CajaLlenaM: BOOL;
+	
+	
+	bResetAzul: BOOL;
+	bResetVerde: BOOL;
+	bResetMetal: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* El Pick-and-Place se encarga de llevar el material a su correspondiente caja. Para ello, se plantea el 
+uso de un CASE para controlar la posición del brazo, dividiendo su proceso por etapas *)
+
+// PIEZAS AZULES
+PickAndPlaceA(
+	MOVIENDOZ:= GVL_StackBox.sPickAndPlaceA.bMovingZ, MOVIENDOX:= GVL_StackBox.sPickAndPlaceA.bMovingX, 
+	ROTANDO:= GVL_StackBox.sPickAndPlaceA.bRotating, DETECTADO:= GVL_StackBox.sPickAndPlaceA.bDetected, 
+	SENSOR:= GVL_StackBox.bDiffuseSensorPyPA, RESET := bResetAzul, ROBOTSEMUEVE=> RobotSeMueveA, 
+	MOVERZ=> GVL_StackBox.sPickAndPlaceA.bMovementZ, MOVERX=> GVL_StackBox.sPickAndPlaceA.bMovementX, 
+	ROTARCCW=> GVL_StackBox.sPickAndPlaceA.bRotateCCW, ROTARCW=> GVL_StackBox.sPickAndPlaceA.bRotateCW, 
+	AGARRAR=> GVL_StackBox.sPickAndPlaceA.bGrab, CAJALLENA => CajaLlenaA);
+		
+
+// PIEZAS VERDES
+PickAndPlaceV(
+	MOVIENDOZ:= GVL_StackBox.sPickAndPlaceV.bMovingZ, MOVIENDOX:= GVL_StackBox.sPickAndPlaceV.bMovingX, 
+	ROTANDO:= GVL_StackBox.sPickAndPlaceV.bRotating, DETECTADO:= GVL_StackBox.sPickAndPlaceV.bDetected, 
+	SENSOR:= GVL_StackBox.bDiffuseSensorPyPV, RESET := bResetVerde, ROBOTSEMUEVE=> RobotSeMueveV, 
+	MOVERZ=> GVL_StackBox.sPickAndPlaceV.bMovementZ, MOVERX=> GVL_StackBox.sPickAndPlaceV.bMovementX, 
+	ROTARCCW=> GVL_StackBox.sPickAndPlaceV.bRotateCCW, ROTARCW=> GVL_StackBox.sPickAndPlaceV.bRotateCW, 
+	AGARRAR=> GVL_StackBox.sPickAndPlaceV.bGrab, CAJALLENA => CajaLlenaV);
+		
+// PIEZAS METAL
+PickAndPlaceM(
+	MOVIENDOZ:= GVL_StackBox.sPickAndPlaceM.bMovingZ, MOVIENDOX:= GVL_StackBox.sPickAndPlaceM.bMovingX, 
+	ROTANDO:= GVL_StackBox.sPickAndPlaceM.bRotating, DETECTADO:= GVL_StackBox.sPickAndPlaceM.bDetected, 
+	SENSOR:= GVL_StackBox.bDiffuseSensorPyPM, RESET := bResetMetal, ROBOTSEMUEVE=> RobotSeMueveM, 
+	MOVERZ=> GVL_StackBox.sPickAndPlaceM.bMovementZ, MOVERX=> GVL_StackBox.sPickAndPlaceM.bMovementX, 
+	ROTARCCW=> GVL_StackBox.sPickAndPlaceM.bRotateCCW, ROTARCW=> GVL_StackBox.sPickAndPlaceM.bRotateCW, 
+	AGARRAR=> GVL_StackBox.sPickAndPlaceM.bGrab, CAJALLENA => CajaLlenaM);]]></ST>
+    </Implementation>
+    <LineIds Name="POU_PickAndPlace">
+      <LineId Id="38" Count="0" />
+      <LineId Id="1647" Count="0" />
+      <LineId Id="1704" Count="0" />
+      <LineId Id="1614" Count="0" />
+      <LineId Id="1597" Count="0" />
+      <LineId Id="1609" Count="1" />
+      <LineId Id="1602" Count="0" />
+      <LineId Id="1605" Count="0" />
+      <LineId Id="1607" Count="0" />
+      <LineId Id="1155" Count="0" />
+      <LineId Id="1674" Count="0" />
+      <LineId Id="1242" Count="0" />
+      <LineId Id="1621" Count="0" />
+      <LineId Id="1623" Count="5" />
+      <LineId Id="1620" Count="0" />
+      <LineId Id="1629" Count="0" />
+      <LineId Id="1631" Count="1" />
+      <LineId Id="1648" Count="0" />
+      <LineId Id="1634" Count="3" />
+      <LineId Id="1630" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

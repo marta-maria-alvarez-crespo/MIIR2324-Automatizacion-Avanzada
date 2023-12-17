@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_LlenadoCajas" Id="{37acc27b-865f-4b0e-9825-5a5a91a9e18a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_LlenadoCajas
+VAR
+	ColocacionCajaAzul: FB_Emitter;
+	ColocacionCajaMetal: FB_Emitter;
+	ColocacionCajaVerde: FB_Emitter;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ColocacionCajaMetal(LIGHTARRAY:= GVL_ProcesoPalet.iLightArrayEmitterM, 
+					SALECAJA:= PRG_Turntable.SaleCajaM,  RESET := POU_PickAndPlace.bResetMetal,
+					CINTA=> GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1);
+					
+ColocacionCajaAzul(LIGHTARRAY:= GVL_ProcesoPalet.iLightArrayEmitterA, 
+					SALECAJA:= PRG_Turntable.SaleCajaA, RESET := POU_PickAndPlace.bResetAzul,
+					CINTA=> GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1);
+
+ColocacionCajaVerde(LIGHTARRAY:= GVL_ProcesoPalet.iLightArrayEmitterV, 
+					SALECAJA:= PRG_Turntable.SaleCajaV, RESET := POU_PickAndPlace.bResetVerde,
+					CINTA=> GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1);]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_LlenadoCajas">
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="24" Count="2" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

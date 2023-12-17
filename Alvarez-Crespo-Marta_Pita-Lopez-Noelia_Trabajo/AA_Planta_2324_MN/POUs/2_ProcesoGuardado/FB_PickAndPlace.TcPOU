@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_PickAndPlace" Id="{b8cafc90-8f8a-4bf4-8017-bedc6fed9946}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PickAndPlace
+VAR_INPUT
+	
+	MOVIENDOZ: BOOL;
+	MOVIENDOX: BOOL;
+	ROTANDO: BOOL;
+	DETECTADO: BOOL;
+	SENSOR: BOOL;
+	
+	RESET: BOOL;
+	
+END_VAR
+
+VAR_OUTPUT
+	
+	ROBOTSEMUEVE: BOOL;
+	
+	MOVERZ: BOOL;
+	MOVERX: BOOL;
+	ROTARCCW: BOOL;
+	ROTARCW: BOOL;
+	AGARRAR: BOOL;
+	CAJALLENA: BOOL;
+	
+END_VAR
+
+VAR
+	CONTADOR: CTU;	
+	CPICKANDPLACE: CPICKANDPLACE;
+	bFTrigMovingX: F_TRIG;
+	bFTrigMovingZ: F_TRIG;
+	bFTrigRotating: F_TRIG;
+	bFTrigDetected: F_TRIG;
+	bRTrigDetected: R_TRIG;
+	bRTrigDiffSensorPyP: R_TRIG;		
+	bConterTrigger: F_TRIG;
+	tRecogidaBrazo: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bFTrigMovingZ(CLK:= MOVIENDOZ);
+bFTrigMovingX(CLK:= MOVIENDOX);
+bFTrigRotating(CLK:= ROTANDO);
+bRTrigDetected(CLK:= DETECTADO);
+bFTrigDetected(CLK:= DETECTADO);
+bRTrigDiffSensorPyP(CLK:= SENSOR);
+bConterTrigger(CLK:= ROTARCW);
+tRecogidaBrazo(IN:= NOT MOVERZ, PT:= T#1S);
+
+CONTADOR(CU:= bConterTrigger.Q, RESET:=RESET, PV:= 5, Q=> CAJALLENA);
+
+CASE CPICKANDPLACE OF
+	
+	PICKANDPLACE_ESPERA:
+	(* La maquina esta esperando a que sea su turno para funcionar *)
+	
+	IF bRTrigDiffSensorPyP.Q THEN
+		CPICKANDPLACE := PICKANDPLACE_DETECCION;
+	END_IF
+
+	
+	PICKANDPLACE_DETECCION:
+	(* Cuando se detecta un LID posicionado, se baja el brazo hasta su detección *)
+	
+	ROBOTSEMUEVE := TRUE;
+	IF NOT CONTADOR.Q THEN
+		MOVERZ := TRUE;
+		CPICKANDPLACE := PICKANDPLACE_AGARRE;
+	END_IF
+	
+	
+	PICKANDPLACE_AGARRE: 
+	(* Se agarra el LID detectado una vez detenido el movimiento de Z y se sube el brazo de nuevo *)
+	
+	IF bRTrigDetected.Q THEN
+		AGARRAR := TRUE;
+		MOVERZ := FALSE;
+		CPICKANDPLACE := PICKANDPLACE_GIRO;	
+	END_IF
+	
+	
+	PICKANDPLACE_GIRO:
+	(* Se comprueba que el brazo está bien posicionado y se rota hacia la sección de llenado de cajas *)
+	
+	IF bFTrigMovingZ.Q THEN
+		ROTARCCW := TRUE;
+	END_IF
+	
+	IF bFTrigRotating.Q THEN
+		ROTARCCW := FALSE;
+		CPICKANDPLACE := PICKANDPLACE_COLOCACION;	
+	END_IF
+	
+	
+	PICKANDPLACE_COLOCACION:
+	(* Cuando se posiciona sobre la zona de llenado de la caja, se estira para achinar dentro *)
+	
+	MOVERX := TRUE;
+	
+	IF bFTrigMovingX.Q THEN
+		CPICKANDPLACE := PICKANDPLACE_DESCENSO;
+	END_IF
+	
+	
+	PICKANDPLACE_DESCENSO: 
+	(* Cuando termina de estirarse, vuelve a bajar el brazo para depositar el LID en la caja *)
+	
+	MOVERZ:= TRUE;		
+	IF bFTrigMovingZ.Q THEN
+		CPICKANDPLACE := PICKANDPLACE_LLENADO;
+	END_IF
+	
+	
+	PICKANDPLACE_LLENADO:
+	(* Cuando se termina de mover en Z, deposita el LID en la caja abriendo el Gripper y sube a su posicion 0 *)
+	
+	AGARRAR := FALSE;	
+	MOVERZ := FALSE;
+	
+	IF tRecogidaBrazo.Q THEN
+		MOVERX := FALSE;	
+	END_IF	
+	
+	IF bFTrigMovingX.Q THEN
+		CPICKANDPLACE := PICKANDPLACE_ORIGEN;	
+	END_IF	
+	
+		
+	PICKANDPLACE_ORIGEN:
+	(* El brazo vuelve a su posición inicial e inicia un nuevo ciclo *)
+
+	ROTARCW := TRUE;	
+	
+	IF bFTrigRotating.Q THEN 
+		ROTARCW := FALSE;
+		ROBOTSEMUEVE := FALSE;
+		CPICKANDPLACE := PICKANDPLACE_ESPERA;
+	END_IF
+		
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="FB_PickAndPlace">
+      <LineId Id="11" Count="5" />
+      <LineId Id="217" Count="1" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="19" Count="5" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="28" Count="5" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="34" Count="8" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="43" Count="11" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="55" Count="8" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="64" Count="4" />
+      <LineId Id="71" Count="2" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="74" Count="3" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="226" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="83" Count="2" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="89" Count="6" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

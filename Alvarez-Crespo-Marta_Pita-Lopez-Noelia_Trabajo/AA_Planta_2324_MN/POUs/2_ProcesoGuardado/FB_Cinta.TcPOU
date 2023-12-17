@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Cinta" Id="{8ddc7460-9a86-49b0-a23c-847f6c521619}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Cinta
+VAR_INPUT
+	BLOQUEANDO: BOOL;
+	SENSOR: BOOL;
+END_VAR
+VAR_OUTPUT
+	CINTA: BOOL;
+END_VAR
+VAR
+	CCINTA: CINTA;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE CCINTA OF
+	CINTA_ACTIVADO: 
+	(* La cinta está trabajando normalmente a la espera de instrucciones *)
+	CINTA := TRUE;
+	IF BLOQUEANDO AND NOT SENSOR THEN
+		CCINTA := CINTA_REPOSO;
+	END_IF
+	
+	CINTA_REPOSO:
+	(* La cinta se debe detener por la acción del sensor (pieza en espera) *)
+	CINTA := FALSE;
+	IF NOT BLOQUEANDO THEN
+		CCINTA := CINTA_ACTIVADO;
+	END_IF
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Cinta">
+      <LineId Id="10" Count="13" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

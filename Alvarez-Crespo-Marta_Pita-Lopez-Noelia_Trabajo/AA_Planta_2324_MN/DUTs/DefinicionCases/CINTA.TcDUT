@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="CINTA" Id="{1514fed0-919c-4aa7-a959-c726844e661f}">
+    <Declaration><![CDATA[{attribute 'strict'}
+TYPE CINTA :
+(
+	CINTA_ACTIVADO,
+	CINTA_REPOSO
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

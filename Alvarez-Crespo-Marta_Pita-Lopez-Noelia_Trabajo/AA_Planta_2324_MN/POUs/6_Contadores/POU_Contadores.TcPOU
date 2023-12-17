@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="POU_Contadores" Id="{379e697d-f57d-4e98-8ff8-dde695db2a2f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM POU_Contadores
+VAR
+	iCintaProcesando : INT := 0;
+	iStackBoxProcesando: INT := 0;
+	reDifSensorSorting: R_TRIG;
+	feRRefSensorSortingA: F_TRIG;
+	feRRefSensorSortingV: F_TRIG;
+	reDifSensorSortingM: F_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[reDifSensorSorting(CLK:= GVL_Sorting.bDiffuseSensorA);
+feRRefSensorSortingA(CLK:= GVL_StackBox.bRReflectiveSensorA1);
+feRRefSensorSortingV (CLK:= GVL_StackBox.bRReflectiveSensorV1); 
+reDifSensorSortingM (CLK:= GVL_Sorting.bDiffuseSensorM);
+
+// SECCION 1 (MARTO)
+(* Sumamos 1 al contador si se comienza a procesar una pieza y se resta 1 cuando se termina de procesar *)
+
+IF reDifSensorSorting.Q THEN
+	iCintaProcesando := iCintaProcesando + 1;
+END_IF
+
+IF feRRefSensorSortingA.Q OR feRRefSensorSortingV.Q OR reDifSensorSortingM.Q THEN
+	iCintaProcesando := iCintaProcesando - 1;
+END_IF
+
+// SECCION 2 (MARTO)
+(* Sumamos 1 al contador si se comienza a procesar una pieza y se resta 1 cuando se termina de procesar *)
+
+IF feRRefSensorSortingA.Q OR feRRefSensorSortingV.Q OR reDifSensorSortingM.Q THEN
+	iStackBoxProcesando := iStackBoxProcesando + 1;
+END_IF
+
+IF NOT (POU_PickAndPlace.RobotSeMueveA OR POU_PickAndPlace.RobotSeMueveV OR POU_PickAndPlace.RobotSeMueveM) THEN
+	iStackBoxProcesando := iStackBoxProcesando - 1;
+END_IF
+
+// SECCION 3 (NOE)
+(* Sumamos 1 al contador si se comienza a procesar una pieza y se resta 1 cuando se termina de procesar *)
+
+
+// SECCION 4 (NOE)
+(* Sumamos 1 al contador si se comienza a procesar una pieza y se resta 1 cuando se termina de procesar *)]]></ST>
+    </Implementation>
+    <LineIds Name="POU_Contadores">
+      <LineId Id="7" Count="31" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

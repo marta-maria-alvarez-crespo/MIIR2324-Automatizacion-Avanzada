@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="POU_SetaEmergencia" Id="{673bb672-76e7-47b1-8f3a-f753faa32ba6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM POU_SetaEmergencia
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* GVL GENERAL *)
+
+GVL_General.sBeltConveyor.bSortingCintaDistribucion := FALSE;
+GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;
+GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
+
+
+GVL_General.bStopBlade1 := FALSE;
+
+
+GVL_General.sBeltConveyor.bCintaAzul1 := FALSE;
+GVL_General.sBeltConveyor.bCintaAzul2 := FALSE;
+
+GVL_General.sBeltConveyor.bCintaMetal1 := FALSE;
+GVL_General.sBeltConveyor.bCintaMetal2 := FALSE;
+
+GVL_General.sBeltConveyor.bCintaVerde1 := FALSE;
+GVL_General.sBeltConveyor.bCintaVerde2 := FALSE;
+
+
+(* GVL ENTRADA *)
+
+GVL_Sorting.sPusherA.Pusher := FALSE;
+GVL_Sorting.sPusherV.Pusher := FALSE;
+GVL_Sorting.sPusherM.Pusher := FALSE;
+
+
+(* GVL GUARDADO *)
+
+GVL_StackBox.bStopBladeA1 := FALSE;
+GVL_StackBox.bStopBladeA2 := FALSE;
+
+GVL_StackBox.bStopBladeV1 := FALSE;
+GVL_StackBox.bStopBladeV2 := FALSE;
+
+GVL_StackBox.bStopBladeM1 := FALSE;
+GVL_StackBox.bStopBladeM2 := FALSE;
+
+GVL_StackBox.sPickAndPlaceA.bGrab := FALSE;
+GVL_StackBox.sPickAndPlaceA.bGripperCCW := FALSE;
+GVL_StackBox.sPickAndPlaceA.bGripperCW := FALSE;
+GVL_StackBox.sPickAndPlaceA.bMovementX := FALSE;
+GVL_StackBox.sPickAndPlaceA.bMovementZ := FALSE;
+GVL_StackBox.sPickAndPlaceA.bRotateCCW := FALSE;
+GVL_StackBox.sPickAndPlaceA.bRotateCW := FALSE;
+
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="POU_SetaEmergencia">
+      <LineId Id="5" Count="0" />
+      <LineId Id="26" Count="2" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="39" Count="2" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="55" Count="2" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="61" Count="7" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

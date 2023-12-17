@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_Almacen" Id="{11c961f0-2fd0-4647-939e-79aa2ce98cb5}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sStackCraneRack: StrackerCraneRack;
+	
+	{attribute 'OPC.UA.DA' := '1'}
+	bDifusseSensorAlmacen:BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	iVisionSensorAlmacen: DINT;
+	{attribute 'OPC.UA.DA' := '1'}
+	bRRflexSensorAlmacen:BOOL;
+	
+	{attribute 'OPC.UA.DA' := '1'}
+	bLoadingConveyor:BOOL;
+	
+	(*almacenamiento de datos de las diferentes posiciones*)
+	aAlmacen: ARRAY[1..54] OF COLOR  :=[54(0)];
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

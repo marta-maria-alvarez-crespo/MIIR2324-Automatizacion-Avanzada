@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_Sorting" Id="{48464522-d516-429e-9f8c-1fadc6b8e6f6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+
+	(* Variables correspondientes al proceso de sorting de las piezas AZULES *)
+	{attribute 'OPC.UA.DA' := '1'}
+	bVisionSensorA	: BOOL;
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sPusherA: Pusher;
+	{attribute 'OPC.UA.DA' := '1'}
+	bDiffuseSensorA: BOOL;
+	
+	(* Variables correspondientes al proceso de sorting de las piezas VERDES *)
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sPusherV: Pusher;
+	{attribute 'OPC.UA.DA' := '1'}
+	bVisionSensorV	: BOOL;	
+	{attribute 'OPC.UA.DA' := '1'}
+	bDiffuseSensorV: BOOL;
+	
+	(* Variables correspondientes al proceso de sorting de las piezas METÁLICAS *)
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sPusherM: Pusher;
+	{attribute 'OPC.UA.DA' := '1'}
+	bVisionSensorM	: BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	bDiffuseSensorM: BOOL;
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

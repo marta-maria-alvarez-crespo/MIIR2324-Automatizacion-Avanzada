@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_General" Id="{969085ec-651f-496f-9d69-79760e983c89}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	{attribute 'OPC.UA.DA' := '1'}
+	bMarcha : BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	bParo : BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	bSetaEmergencia : BOOL;
+	
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sBeltConveyor: BeltConveyor;
+	
+	{attribute 'OPC.UA.DA' := '1'}
+	bStopBlade1 : BOOL;	
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

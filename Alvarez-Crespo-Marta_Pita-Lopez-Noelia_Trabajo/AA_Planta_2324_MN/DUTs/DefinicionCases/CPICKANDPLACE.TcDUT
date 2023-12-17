@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="CPICKANDPLACE" Id="{edd032cf-3527-4623-a288-b28d6ca81d2a}">
+    <Declaration><![CDATA[{attribute 'strict'}
+TYPE CPICKANDPLACE :
+(
+	PICKANDPLACE_ESPERA,
+	PICKANDPLACE_DETECCION,
+	PICKANDPLACE_AGARRE,
+	PICKANDPLACE_GIRO,
+	PICKANDPLACE_COLOCACION,
+	PICKANDPLACE_DESCENSO,
+	PICKANDPLACE_LLENADO,
+	PICKANDPLACE_ORIGEN
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

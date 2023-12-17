@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="CPOSITIONERLEFTBAR" Id="{9d3ccb8f-b327-4ac7-9c94-7e8d2990b075}">
+    <Declaration><![CDATA[{attribute 'strict'}
+TYPE CPOSITIONERLEFTBAR :
+(
+	CPOSITIONERLEFTBAR_ESPERA,
+	CPOSITIONERLEFTBAR_AGARRE,
+	CPOSITIONERLEFTBAR_PROCESADO,
+	CPOSITIONERLEFTBAR_RESET,
+	CPOSITIONERLEFTBAR_PASO
+	
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

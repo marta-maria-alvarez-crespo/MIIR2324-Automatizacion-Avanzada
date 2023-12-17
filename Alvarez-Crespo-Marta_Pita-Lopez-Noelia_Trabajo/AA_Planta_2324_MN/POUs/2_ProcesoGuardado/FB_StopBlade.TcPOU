@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_StopBlade" Id="{a18bfb3f-97bd-4ce8-b578-438b54d71bcf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_StopBlade
+VAR_INPUT
+	TENERPIEZA: BOOL;
+END_VAR
+VAR_OUTPUT
+	ESTOYBLOQUEANDO: BOOL;
+	STOPBLADE: BOOL;
+END_VAR
+VAR
+	CSTOPBLADE: STOPBLADE := STOPBLADE_REPOSO;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* El StopBlade está en estado de reposo hasta recibir instrucciones *)
+IF TENERPIEZA THEN
+		STOPBLADE := TENERPIEZA;
+		ESTOYBLOQUEANDO:= TENERPIEZA;
+ELSE
+		STOPBLADE := TENERPIEZA;
+		ESTOYBLOQUEANDO:= TENERPIEZA;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_StopBlade">
+      <LineId Id="13" Count="2" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

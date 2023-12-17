@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="RollerConveyor" Id="{10c87522-15c6-40ea-bfff-1af18a464e24}">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+TYPE RollerConveyor :
+STRUCT
+	
+	(* ROLL PARA PIEZAS AZULES, ordenadas por aparición*)
+	bRollerAzul1 		 : BOOL;
+	bCurvedRollerAzul1 	: BOOL;
+	
+	(* ROLL PARA PIEZAS VERDER, ordenadas por aparición*)
+	bRollerVerde1 		 : BOOL;
+	
+	(* ROLL PARA PIEZAS Metal, ordenadas por aparición*)
+	bRollerMetal1 		 : BOOL;
+	bCurvedRollerMetal1  : BOOL;
+	
+	(* ROLL ALMACEN, ordenadas por aparición*)
+	bRollerAlmacen1		 : BOOL;
+	bCurvedRollerAlmacen : BOOL;
+	bRollerAlmacen2		 : BOOL;
+	bRollerCargaAlmacen  : BOOL;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Emitter" Id="{0941df9b-1ff2-48dc-8131-9854314bbfe4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Emitter
+
+VAR_INPUT
+	LIGHTARRAY : BOOL;
+	SALECAJA: BOOL;
+	RESET : BOOL;
+END_VAR
+
+VAR_OUTPUT
+	CINTA : BOOL;
+END_VAR
+
+VAR
+	bRTrigReset: R_TRIG;
+	tRTrigEmitter: R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Este FB se encarga de controlar la activaicón y desactivación de los roller
+mientras haya o no haya una caja a la espera *)
+tRTrigEmitter(CLK:= LIGHTARRAY, Q=> RESET);
+
+RESET := FALSE;
+
+IF NOT SALECAJA THEN
+	IF NOT LIGHTARRAY THEN
+		CINTA := TRUE;	
+	END_IF
+	
+	IF LIGHTARRAY THEN
+		CINTA := FALSE;
+	END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Emitter">
+      <LineId Id="9" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="3" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="STOPBLADE" Id="{5e3a5026-c97e-4f61-8bca-ad29b0fcc91d}">
+    <Declaration><![CDATA[{attribute 'strict'}
+TYPE STOPBLADE :
+(
+	STOPBLADE_REPOSO,
+	STOPBLADE_ACTIVADO
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

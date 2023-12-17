@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="Turntable" Id="{73cfdf2a-8204-41ac-843d-33d0bdd37d23}">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+TYPE Turntable :
+STRUCT
+	
+	(* Outputs de la Turntable *)
+	RollPositivo : BOOL;
+	RollNegativo : BOOL;
+	Turn		 : BOOL;
+	
+	(* Inputs de la Turntable *)
+	FrontLimit	 : BOOL;
+	BackLimit	 : BOOL;
+	Limit0		 : BOOL;
+	Limit90		 : BOOL;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

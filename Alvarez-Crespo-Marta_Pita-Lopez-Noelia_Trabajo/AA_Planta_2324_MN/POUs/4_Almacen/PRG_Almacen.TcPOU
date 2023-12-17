@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_Almacen" Id="{1101874a-6a42-4c7a-9ad2-e9048f62be9e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Almacen
+VAR
+	iPosicion : INT;
+	i: INT := 1;
+	
+	ALMACEN: INT;
+	fTrigRRefSensorAlmacen	: F_TRIG;
+	fTrigLift				: F_TRIG;
+	fTrigMovingX			: F_TRIG;
+	LECTURA: COLOR;
+	DINT_TO_COLOR: DINT_TO_COLOR;
+	bEstoyLleno: BOOL;
+	tTimerRack : TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fTrigRRefSensorAlmacen(CLK:= GVL_Almacen.bRRflexSensorAlmacen);
+fTrigLift(CLK:= GVL_Almacen.sStackCraneRack.MovingZ);
+fTrigMovingX(CLK:= GVL_Almacen.sStackCraneRack.MovingX);
+tTimerRack(IN:=GVL_Almacen.sStackCraneRack.MiddleLimit, PT:=T#1S);
+
+CASE ALMACEN OF
+	0:
+	(* Colocamos el almacen en posición de espera *)
+	
+	GVL_Almacen.sStackCraneRack.TargetPosition := 55;
+	GVL_Almacen.bLoadingConveyor := FALSE;
+	
+	IF NOT GVL_Almacen.sStackCraneRack.MovingX AND NOT GVL_Almacen.sStackCraneRack.MovingZ AND tTimerRack.Q THEN
+		GVL_Almacen.sStackCraneRack.Right := TRUE;
+		GVL_Almacen.sStackCraneRack.Lift  := FALSE;
+	END_IF
+	
+	IF GVL_Almacen.sStackCraneRack.RightLimit THEN
+		ALMACEN := 1;
+	END_IF
+	
+	
+	1:
+	(* Esperamos a montar el palet en el almacén *)
+	
+	IF GVL_Almacen.iVisionSensorAlmacen > 0 THEN
+		DINT_TO_COLOR(ENTRADA:= GVL_Almacen.iVisionSensorAlmacen, SALIDA=> LECTURA);
+		GVL_Almacen.bLoadingConveyor := TRUE;
+	END_IF
+
+	IF fTrigRRefSensorAlmacen.Q THEN
+		GVL_Almacen.bLoadingConveyor := FALSE;
+		GVL_Almacen.sStackCraneRack.Lift:= TRUE;
+	END_IF
+	
+	IF fTrigLift.Q THEN
+		GVL_Almacen.sStackCraneRack.Right := FALSE;
+	END_IF
+	
+	IF GVL_Almacen.sStackCraneRack.MiddleLimit THEN
+		ALMACEN := 2;
+	END_IF
+	
+	
+	2:
+	(* Una vez colocada la caja en posición, buscamos un sitio donde almacenar *)
+
+	FOR i := 1 TO 54 BY 1 DO
+		IF	GVL_Almacen.aAlmacen[i] = VACIO THEN
+			iPosicion := i;
+			GVL_Almacen.aAlmacen[i] := LECTURA;
+			ALMACEN := 3;
+			EXIT;
+		ELSIF i = 54 THEN
+			bEstoyLleno := TRUE;
+			ALMACEN := 4;
+		END_IF
+	END_FOR
+	
+	
+	3:
+	(* Almacenamos en el sitio indicado *)
+	
+	GVL_Almacen.sStackCraneRack.TargetPosition := iPosicion;
+	
+	IF fTrigMovingX.Q THEN
+		GVL_Almacen.sStackCraneRack.Left := TRUE;
+	END_IF
+	
+	IF GVL_Almacen.sStackCraneRack.LeftLimit THEN
+		GVL_Almacen.sStackCraneRack.Lift := FALSE;
+		ALMACEN := 5;
+	END_IF	
+	
+	
+	5:
+	(* Almacen lleno *)
+	
+	IF fTrigLift.Q THEN
+		GVL_Almacen.sStackCraneRack.Left := FALSE;	
+	END_IF
+	
+	IF GVL_Almacen.sStackCraneRack.MiddleLimit THEN
+		ALMACEN := 0;
+	END_IF
+	
+	
+	4:
+	(* Almacen lleno *)
+	
+	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := FALSE;
+	GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := FALSE;
+	GVL_ProcesoPalet.sRollerConveyor.bRollerCargaAlmacen := TRUE;
+	
+	IF NOT bEstoyLleno THEN
+		ALMACEN := 0;
+	END_IF
+	
+END_CASE
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Almacen">
+      <LineId Id="161" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="363" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="144" Count="2" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="147" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="291" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="211" Count="9" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="245" Count="3" />
+      <LineId Id="258" Count="1" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="346" Count="0" />
+      <LineId Id="261" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="344" Count="0" />
+      <LineId Id="342" Count="1" />
+      <LineId Id="345" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="323" Count="0" />
+      <LineId Id="341" Count="0" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="347" Count="0" />
+      <LineId Id="337" Count="1" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="326" Count="1" />
+      <LineId Id="325" Count="0" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="350" Count="8" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="198" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

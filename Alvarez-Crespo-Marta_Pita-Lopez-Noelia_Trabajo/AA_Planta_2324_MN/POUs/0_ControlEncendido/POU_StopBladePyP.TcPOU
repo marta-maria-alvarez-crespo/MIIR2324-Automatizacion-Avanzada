@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="POU_StopBladePyP" Id="{838752ec-6ada-4499-9344-33a85b9aa604}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM POU_StopBladePyP
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GVL_StackBox.bStopBladeA2 := TRUE;
+GVL_StackBox.bStopBladeV2 := TRUE;
+GVL_StackBox.bStopBladeM2 := TRUE;]]></ST>
+    </Implementation>
+    <LineIds Name="POU_StopBladePyP">
+      <LineId Id="5" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Positioner" Id="{a5992cad-71da-412b-af85-94e35785274b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Positioner
+VAR_INPUT
+	
+	SENSOR1 : BOOL;
+	SENSOR3 : BOOL;
+	SENSORPYP : BOOL;
+	CLAMPED : BOOL;
+	ROBOTSEMUEVE : BOOL;
+	LIMITE : BOOL;
+	
+END_VAR
+VAR_OUTPUT
+	
+	TENGOUNAPIEZA : BOOL := FALSE;
+	CLAMP : BOOL;
+	RAISE : BOOL;
+	
+END_VAR
+VAR
+	CPOSITIONERLEFTBAR		 : CPOSITIONERLEFTBAR := CPOSITIONERLEFTBAR_ESPERA;
+
+	tClampTimer				 : TON;
+	tClampTimer2			 : TON;
+	
+	bRTrigClamp				 : R_TRIG;	
+	bRTrigRReflectiveSensor1 : R_TRIG;
+	bFTrigDifSensorPyP		 : F_TRIG;
+	bRTrigRReflectiveSensor3 : R_TRIG;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bRTrigClamp(CLK:= RAISE);
+tClampTimer(IN:= RAISE, PT:= T#0.7S);
+
+bRTrigRReflectiveSensor1(CLK:= SENSOR1);
+bRTrigRReflectiveSensor3(CLK:= SENSOR3);
+bFTrigDifSensorPyP(CLK:= SENSORPYP);
+
+(* Se fuerza que el positioner solo funcione cuando el sensor inmediatamente anterior, detecta un cambio
+de flanco. Para evitar el golpe inicial de inicio de fábrica, se le añade el control a través del botón de
+marcha, aprovechando que se mantiene un pequeño período de tiempo pulsado *)
+
+IF bRTrigRReflectiveSensor3.Q AND NOT GVL_General.bMarcha THEN
+	TENGOUNAPIEZA := TRUE;
+END_IF
+
+(* Se definen los CASE para su control. Se definen etapas correspondientes a los diferentes estados
+en los que se debe encontrar para su funcionamiento. Además, se controla el número de elementos
+simultáneos en la cinta a través de la variable iContadorCX2 (siendo X el tipo de línea) *)
+	
+CASE CPOSITIONERLEFTBAR OF
+	CPOSITIONERLEFTBAR_ESPERA:
+	(* Aqui la maquina esta esperando a que sea su turno para funcionar *)	
+	
+	IF TENGOUNAPIEZA THEN
+		CPOSITIONERLEFTBAR := CPOSITIONERLEFTBAR_AGARRE;
+	END_IF
+
+	CPOSITIONERLEFTBAR_AGARRE:
+	(* El proceso activa mediante el cambio de flanco del sensor el agarre del objeto de 
+	entrada. Se añade una variable bOn que mantiene el sistema encendido hasta el siguiente cambio 
+	de flanco, controlando correctamente la barrera de entrada *)
+
+	CLAMP := TRUE;
+	
+	IF CLAMPED  AND NOT ROBOTSEMUEVE THEN
+		CPOSITIONERLEFTBAR := CPOSITIONERLEFTBAR_PROCESADO;
+	END_IF		
+	
+	CPOSITIONERLEFTBAR_PROCESADO:
+	(* El objeto se suelta una vez colocado correctamente en la cinta, y se eleva el Positioner para
+	permitir su avance por la línea. *)
+	
+	CLAMP := FALSE;
+	RAISE := TRUE;
+	
+	IF bRTrigClamp.Q THEN 
+		CPOSITIONERLEFTBAR := CPOSITIONERLEFTBAR_RESET;
+	END_IF
+	
+	CPOSITIONERLEFTBAR_RESET:
+	(* Se baja el Positioner hasta que vuelve a su posición inicial. Se agrega un timer que permite
+	esperar a que el LID correspondiente se encuentre fuera del rango de la máquina, para evitar 
+	colisiones sobre el material. Una vez esto ocurre, se abre el paso para el siguiente elemento *)
+
+	IF LIMITE AND tClampTimer.Q THEN
+		RAISE := FALSE;
+		CPOSITIONERLEFTBAR := CPOSITIONERLEFTBAR_PASO;
+	END_IF	
+	
+	CPOSITIONERLEFTBAR_PASO: 
+	(* La barrera no se bajará hasta qe el positioner llegue al final de su movimiento *)
+	
+	IF LIMITE THEN
+		TENGOUNAPIEZA := FALSE;
+		CPOSITIONERLEFTBAR := CPOSITIONERLEFTBAR_ESPERA;
+	END_IF
+END_CASE
+	]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Positioner">
+      <LineId Id="11" Count="1" />
+      <LineId Id="14" Count="37" />
+      <LineId Id="54" Count="9" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="65" Count="15" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

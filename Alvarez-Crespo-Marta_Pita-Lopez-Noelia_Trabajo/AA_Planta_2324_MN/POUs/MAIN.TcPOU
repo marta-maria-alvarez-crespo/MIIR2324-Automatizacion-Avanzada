@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{28e20df2-0591-4dfb-a4d7-597d7dcfe426}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	bON: BOOL; 
+	bOFF: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+  	  ESCOLA POLITÉCNICA DE ENXEÑARÍA DE FERROL			
+			  UNIVERSIDADE DA CORUÑA 						
+			
+Máster Universitario en Informática Industrial y Robótica   
+  	Automatización Avanzada - Curso 2023-2024			
+
+					Profesorado: 						
+ 	Antonio J. Díaz Longueira - Míriam Timiraos Díaz 		
+
+ 		    	Código realizado por:
+	Marta María Álvarez Crespo - Noelia Pita López  		
+*)
+
+PRG_LlenadoCajas();
+POU_StopBladePyP();
+POU_Contadores();
+PRG_Turntable();
+PRG_Almacen();
+
+IF GVL_General.bMarcha THEN
+	bON := TRUE;
+END_IF
+
+IF GVL_General.bParo THEN
+	bOFF := TRUE;
+END_IF
+
+IF bON AND NOT bOFF AND GVL_General.bSetaEmergencia THEN
+	POU_OnFabrica();
+	POU_ProcesoEntrada();
+	POU_PickAndPlace();
+	POU_PositionerAzul();
+	POU_Parada();
+END_IF
+
+IF bOFF THEN
+	POU_FinDeCiclo();
+	bON := FALSE;
+END_IF
+
+IF NOT GVL_General.bSetaEmergencia THEN
+	POU_SetaEmergencia();
+END_IF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(*
+		♡ 
+    /\_____/\
+   /  o   o  \						
+  ( ==  ^  == )		
+   )         (		   __     miau
+ (             )______/  |		miau 
+(__(__)___(__)__)_______/	 
+
+*)
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="763" Count="12" />
+      <LineId Id="849" Count="0" />
+      <LineId Id="786" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="841" Count="0" />
+      <LineId Id="848" Count="0" />
+      <LineId Id="855" Count="0" />
+      <LineId Id="536" Count="28" />
+      <LineId Id="776" Count="4" />
+      <LineId Id="565" Count="1" />
+      <LineId Id="787" Count="50" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="753" Count="4" />
+      <LineId Id="840" Count="0" />
+      <LineId Id="760" Count="2" />
+      <LineId Id="568" Count="0" />
+      <LineId Id="87" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
