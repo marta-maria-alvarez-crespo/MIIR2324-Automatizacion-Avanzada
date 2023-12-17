@@ -5,12 +5,9 @@
 VAR
 	Turntable : CTURNTABLE;
 
-	
 	SaleCajaA : BOOL;
 	SaleCajaV : BOOL;
 	SaleCajaM : BOOL;
-	
-	iCajaProcesando : INT;
 	
 	tFTrigDiffuseSensor	: F_TRIG;
 	tFTrigEmitterA: F_TRIG;
@@ -36,7 +33,6 @@ CASE Turntable OF
 		
 		IF tFTrigEmitterA.Q THEN
 			Turntable := CTURNTABLE_FILTROPRIORIDAD;
-			iCajaProcesando := iCajaProcesando + 1;
 		END_IF
 	END_IF
 	
@@ -47,7 +43,6 @@ CASE Turntable OF
 		
 		IF tFTrigEmitterV.Q THEN
 			Turntable := CTURNTABLE_FILTROPRIORIDAD;
-			iCajaProcesando := iCajaProcesando + 1;
 		END_IF
 	END_IF
 	
@@ -58,7 +53,6 @@ CASE Turntable OF
 		
 		IF tFTrigEmitterM.Q THEN
 			Turntable := CTURNTABLE_FILTROPRIORIDAD;
-			iCajaProcesando := iCajaProcesando + 1;
 		END_IF
 	END_IF
 
@@ -157,7 +151,8 @@ END_CASE]]></ST>
     </Implementation>
     <LineIds Name="PRG_Turntable">
       <LineId Id="301" Count="1" />
-      <LineId Id="307" Count="2" />
+      <LineId Id="307" Count="1" />
+      <LineId Id="341" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="85" Count="0" />
       <LineId Id="31" Count="0" />
@@ -169,9 +164,7 @@ END_CASE]]></ST>
       <LineId Id="93" Count="0" />
       <LineId Id="310" Count="0" />
       <LineId Id="314" Count="0" />
-      <LineId Id="311" Count="0" />
-      <LineId Id="313" Count="0" />
-      <LineId Id="312" Count="0" />
+      <LineId Id="311" Count="1" />
       <LineId Id="43" Count="0" />
       <LineId Id="41" Count="0" />
       <LineId Id="46" Count="0" />
@@ -179,7 +172,7 @@ END_CASE]]></ST>
       <LineId Id="63" Count="0" />
       <LineId Id="47" Count="0" />
       <LineId Id="315" Count="0" />
-      <LineId Id="317" Count="2" />
+      <LineId Id="317" Count="1" />
       <LineId Id="316" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="50" Count="0" />
@@ -188,7 +181,7 @@ END_CASE]]></ST>
       <LineId Id="172" Count="0" />
       <LineId Id="65" Count="0" />
       <LineId Id="323" Count="0" />
-      <LineId Id="320" Count="2" />
+      <LineId Id="320" Count="1" />
       <LineId Id="49" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="109" Count="0" />

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_RollerConveyors" Id="{934fb174-5cc9-46f2-8626-67d23653f419}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM FB_RollerConveyors
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := TRUE;
+GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := TRUE;
+GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_RollerConveyors">
+      <LineId Id="6" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

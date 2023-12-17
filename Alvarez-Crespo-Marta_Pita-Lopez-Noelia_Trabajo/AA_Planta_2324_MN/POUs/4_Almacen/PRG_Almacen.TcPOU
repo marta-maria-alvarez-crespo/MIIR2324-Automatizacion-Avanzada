@@ -14,7 +14,7 @@ VAR
 	DINT_TO_COLOR: DINT_TO_COLOR;
 	bEstoyLleno: BOOL;
 	tTimerRack : TON;
-	iGuardandoCaja: INT;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -49,8 +49,6 @@ CASE ALMACEN OF
 	END_IF
 
 	IF fTrigRRefSensorAlmacen.Q THEN
-		PRG_Turntable.iCajaProcesando := PRG_Turntable.iCajaProcesando - 1;
-		iGuardandoCaja := iGuardandoCaja + 1;
 		GVL_Almacen.bLoadingConveyor := FALSE;
 		GVL_Almacen.sStackCraneRack.Lift:= TRUE;
 	END_IF
@@ -99,8 +97,7 @@ CASE ALMACEN OF
 	(* Almacen lleno *)
 	
 	IF fTrigLift.Q THEN
-		GVL_Almacen.sStackCraneRack.Left := FALSE;
-		iGuardandoCaja := iGuardandoCaja - 1;	
+		GVL_Almacen.sStackCraneRack.Left := FALSE;	
 	END_IF
 	
 	IF GVL_Almacen.sStackCraneRack.MiddleLimit THEN
@@ -150,7 +147,6 @@ END_CASE
       <LineId Id="153" Count="0" />
       <LineId Id="210" Count="0" />
       <LineId Id="221" Count="0" />
-      <LineId Id="382" Count="1" />
       <LineId Id="211" Count="9" />
       <LineId Id="209" Count="0" />
       <LineId Id="318" Count="0" />
@@ -185,7 +181,6 @@ END_CASE
       <LineId Id="336" Count="0" />
       <LineId Id="347" Count="0" />
       <LineId Id="337" Count="1" />
-      <LineId Id="385" Count="0" />
       <LineId Id="332" Count="0" />
       <LineId Id="340" Count="0" />
       <LineId Id="326" Count="1" />

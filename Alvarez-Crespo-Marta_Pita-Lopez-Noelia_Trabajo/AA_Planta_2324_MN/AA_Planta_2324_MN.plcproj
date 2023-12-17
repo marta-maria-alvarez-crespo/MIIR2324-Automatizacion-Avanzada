@@ -54,6 +54,9 @@
     <Compile Include="DUTs\Objetos\RollerConveyor.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Objetos\Selector.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\Objetos\StrackerCraneRack.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -82,7 +85,10 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\0_ControlEncendido\POU_FinCiclo.TcPOU">
+    <Compile Include="POUs\0_ControlEncendido\FB_ApagadoCintas.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\0_ControlEncendido\FB_RollerConveyors.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\0_ControlEncendido\POU_FinDeCiclo.TcPOU">
@@ -110,6 +116,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Almacen\PRG_Almacen.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\4_Almacen\PRG_PanelDeControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Almacen\PRG_RetiradaAlmacen.TcPOU">

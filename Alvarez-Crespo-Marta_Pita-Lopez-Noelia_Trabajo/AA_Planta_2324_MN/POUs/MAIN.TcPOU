@@ -22,7 +22,7 @@ Máster Universitario en Informática Industrial y Robótica
 	Marta María Álvarez Crespo - Noelia Pita López  		
 *)
 
-
+PRG_RetiradaAlmacen();
 POU_StopBladePyP();
 POU_Contadores();
 

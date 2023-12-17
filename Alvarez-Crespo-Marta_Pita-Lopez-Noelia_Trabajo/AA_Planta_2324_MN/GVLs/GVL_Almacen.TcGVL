@@ -19,7 +19,12 @@ VAR_GLOBAL
 	
 	(*almacenamiento de datos de las diferentes posiciones*)
 	aAlmacen: ARRAY[1..54] OF COLOR  :=[54(0)];
+	
+	
+	sSelector : Selector;
 
+	Sacar: BOOL;
+	bReset: BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

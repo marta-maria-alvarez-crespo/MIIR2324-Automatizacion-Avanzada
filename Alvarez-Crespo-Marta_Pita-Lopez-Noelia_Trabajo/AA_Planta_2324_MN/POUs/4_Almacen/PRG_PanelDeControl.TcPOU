@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_PanelDeControl" Id="{4125b4fd-54c0-4476-b867-203b20e49183}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_PanelDeControl
+VAR
+	tRTrigSacar			: R_TRIG;
+	
+	iCantidad: INT := 0;
+	iSolicitudColor: COLOR;
+	iSolicitud: INT := 0;
+	i: INT;
+	iPosicion: INT;
+	LECTURA: COLOR;
+	bReset : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tRTrigSacar (CLK:= GVL_Almacen.Sacar);
+
+(* Rosca de selección del tipo de caja. Botón verde para seleccionar el color deseado. Se va al infinito por eso de que revisa el for todo el rato
+entonces suma lo que ya ha sumado. Lo que quiero es que cada vez que detecte el cambio de posición, recorra todo el for una vez...  Pero así no se 
+actualizaría en tiempo real, y yo quiero que se actualice en tiempo real. Pensé en ponerlo en uun case donde la condicion de que cuando llegue a 54 
+haga el salto de CASE hasta otro flanco de subida -> Esto impide que se actualice el valor si se va rellenando... *)
+	
+IF GVL_Almacen.sSelector.StateAzul THEN
+	iSolicitudColor := AZUL;
+	FOR i := 1 TO 54 BY 1 DO
+		IF	GVL_Almacen.aAlmacen[i] = AZUL THEN
+			iCantidad := iCantidad + 1;
+		END_IF
+	END_FOR
+END_IF
+
+IF NOT GVL_Almacen.sSelector.StateMetal AND NOT GVL_Almacen.sSelector.StateAzul THEN
+	iSolicitudColor := VERDE;
+	FOR i := 1 TO 54 BY 1 DO
+		IF	GVL_Almacen.aAlmacen[i] = VERDE THEN
+			iCantidad := iCantidad + 1;
+		END_IF
+	END_FOR
+END_IF
+
+IF GVL_Almacen.sSelector.StateMetal THEN
+	iSolicitudColor := METAL;
+	FOR i := 1 TO 54 BY 1 DO
+		IF	GVL_Almacen.aAlmacen[i] = METAL THEN
+			iCantidad := iCantidad + 1;
+		END_IF
+	END_FOR
+END_IF
+
+(* BOTÓN VERDE: Aquí sumamos el número de cajas a sacar, que nunca puede ser mayor de las que hay *)
+
+IF tRTrigSacar.Q AND iSolicitud <= iCantidad THEN
+	iSolicitud := iSolicitud + 1;
+END_IF
+
+
+(* BOTÓN NARANJA. Paro fin de ciclo *)
+
+IF GVL_Almacen.bReset THEN
+	bReset := TRUE;
+	IF PRG_RetiradaAlmacen.SELECCION = 3 THEN
+		iSolicitud := 1;
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_PanelDeControl">
+      <LineId Id="6" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="15" Count="31" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="65" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

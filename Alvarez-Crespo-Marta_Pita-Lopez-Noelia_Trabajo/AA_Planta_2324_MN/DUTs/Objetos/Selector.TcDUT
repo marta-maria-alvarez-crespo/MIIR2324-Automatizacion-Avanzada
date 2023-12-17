@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="Selector" Id="{81f43dae-5a1e-4994-982d-d0f4e6648bae}">
+    <Declaration><![CDATA[{attribute 'OPC.UA.DA' := '1'}
+TYPE Selector :
+STRUCT
+	StateAzul : BOOL;
+	StateMetal : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
