@@ -7,12 +7,12 @@ STRUCT
 	
 	(* ROLL PARA PIEZAS AZULES, ordenadas por aparición*)
 	bRollerAzul1 		 : BOOL;
-	bCurvedRollerAzul1 	: BOOL;
+	bCurvedRollerAzul1 	 : BOOL;
 	
-	(* ROLL PARA PIEZAS VERDER, ordenadas por aparición*)
+	(* ROLL PARA PIEZAS VERDES, ordenadas por aparición*)
 	bRollerVerde1 		 : BOOL;
 	
-	(* ROLL PARA PIEZAS Metal, ordenadas por aparición*)
+	(* ROLL PARA PIEZAS METAL, ordenadas por aparición*)
 	bRollerMetal1 		 : BOOL;
 	bCurvedRollerMetal1  : BOOL;
 	
@@ -20,6 +20,11 @@ STRUCT
 	bRollerAlmacen1		 : BOOL;
 	bCurvedRollerAlmacen : BOOL;
 	bRollerAlmacen2		 : BOOL;
+	
+	(* ROLLER SALIDA ALMACEN, ordenadas por aparición *)
+	
+	bRollerAlmacen3 : BOOL;
+	bRollerAlmacen4 : BOOL;
 	
 END_STRUCT
 END_TYPE

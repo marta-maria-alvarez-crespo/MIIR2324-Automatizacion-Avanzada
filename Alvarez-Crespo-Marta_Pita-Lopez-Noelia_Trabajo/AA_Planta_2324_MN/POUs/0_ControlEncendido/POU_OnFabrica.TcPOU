@@ -15,7 +15,6 @@ GVL_General.sBeltConveyor.bCintaVerde2 := TRUE;
 GVL_General.sBeltConveyor.bCintaMetal2 := TRUE;
 
 GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := TRUE;
-GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := TRUE;
 GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;]]></ST>
     </Implementation>
     <LineIds Name="POU_OnFabrica">
@@ -24,7 +23,7 @@ GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;]]></ST>
       <LineId Id="63" Count="0" />
       <LineId Id="77" Count="0" />
       <LineId Id="41" Count="0" />
-      <LineId Id="78" Count="1" />
+      <LineId Id="79" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

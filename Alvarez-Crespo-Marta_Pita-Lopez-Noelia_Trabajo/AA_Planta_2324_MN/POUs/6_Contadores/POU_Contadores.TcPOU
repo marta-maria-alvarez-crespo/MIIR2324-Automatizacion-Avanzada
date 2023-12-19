@@ -14,13 +14,14 @@ VAR
 	feRRefSensorSortingV: F_TRIG;
 	reDifSensorSortingM: F_TRIG;
 	fTrigRRefSensorAlmacen: F_TRIG;
-	
 	tFTrigEmitterA: F_TRIG;
 	tFTrigEmitterV: F_TRIG;
 	tFTrigEmitterM: F_TRIG;
-	
-
 	tFTrigDiffuseSensor : F_TRIG;
+	
+	fFtrigRobotSeMueveA : F_TRIG;
+	fFtrigRobotSeMueveV : F_TRIG;
+	fFtrigRobotSeMueveM : F_TRIG;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -30,10 +31,13 @@ feRRefSensorSortingV (CLK:= GVL_StackBox.bRReflectiveSensorV1);
 reDifSensorSortingM (CLK:= GVL_Sorting.bDiffuseSensorM);
 tFTrigDiffuseSensor(CLK:= GVL_ProcesoPalet.bDiffuseSensorSalida);
 fTrigRRefSensorAlmacen(CLK:= GVL_Almacen.bRRflexSensorAlmacen);
-
 tFTrigEmitterA(CLK:= GVL_ProcesoPalet.iLightArrayEmitterA);
 tFTrigEmitterV(CLK:= GVL_ProcesoPalet.iLightArrayEmitterV);
 tFTrigEmitterM(CLK:= GVL_ProcesoPalet.iLightArrayEmitterM);
+
+fFtrigRobotSeMueveA(CLK:= POU_PickAndPlace.RobotSeMueveA);
+fFtrigRobotSeMueveV(CLK:= POU_PickAndPlace.RobotSeMueveV);
+fFtrigRobotSeMueveM(CLK:= POU_PickAndPlace.RobotSeMueveM);
 
 // SECCION 1 
 (* Sumamos 1 al contador si se comienza a procesar una pieza y se resta 1 cuando se termina de procesar *)
@@ -71,15 +75,15 @@ IF reDifSensorSortingM.Q THEN
 END_IF
 
 
-IF NOT POU_PickAndPlace.RobotSeMueveA THEN
+IF fFtrigRobotSeMueveA.Q THEN
 	iStackBoxProcesando := iStackBoxProcesando - 1;
 END_IF
 
-IF NOT POU_PickAndPlace.RobotSeMueveV THEN
+IF fFtrigRobotSeMueveV.Q THEN
 	iStackBoxProcesando := iStackBoxProcesando - 1;
 END_IF
 
-IF NOT POU_PickAndPlace.RobotSeMueveM THEN
+IF fFtrigRobotSeMueveM.Q THEN
 	iStackBoxProcesando := iStackBoxProcesando - 1;
 END_IF
 
@@ -118,11 +122,11 @@ END_IF
 // SECCION 5 
 (* Sumamos 1 al contador si se comienza a procesar una pieza y se resta 1 cuando se termina de procesar *)
 
-IF PRG_Almacen.ALMACEN > 0 THEN
+IF PRG_Almacen.ALMACEN > 1 THEN
 	bGuardandoCaja := TRUE;
 END_IF
 
-IF PRG_Almacen.ALMACEN = 0 THEN
+IF PRG_Almacen.ALMACEN < 2 THEN
 	bGuardandoCaja := FALSE;
 END_IF]]></ST>
     </Implementation>
@@ -130,8 +134,12 @@ END_IF]]></ST>
       <LineId Id="7" Count="3" />
       <LineId Id="50" Count="0" />
       <LineId Id="75" Count="0" />
-      <LineId Id="85" Count="2" />
+      <LineId Id="86" Count="1" />
       <LineId Id="84" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="165" Count="0" />
       <LineId Id="65" Count="0" />
       <LineId Id="12" Count="9" />
       <LineId Id="112" Count="0" />

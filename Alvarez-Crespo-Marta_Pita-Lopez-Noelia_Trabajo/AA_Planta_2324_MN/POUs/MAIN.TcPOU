@@ -22,7 +22,6 @@ Máster Universitario en Informática Industrial y Robótica
 	Marta María Álvarez Crespo - Noelia Pita López  		
 *)
 
-PRG_RetiradaAlmacen();
 POU_StopBladePyP();
 POU_Contadores();
 
@@ -30,12 +29,13 @@ IF GVL_General.bMarcha THEN
 	bON := TRUE;
 END_IF
 
-IF GVL_General.bParo THEN
+IF NOT GVL_General.bParo THEN
 	bON := FALSE;
 	POU_FinDeCiclo();
 END_IF
 
 IF bON AND GVL_General.bSetaEmergencia THEN
+	
 	POU_OnFabrica();
 	POU_ProcesoEntrada();
 	POU_PickAndPlace();
@@ -43,14 +43,18 @@ IF bON AND GVL_General.bSetaEmergencia THEN
 	POU_Parada();
 	PRG_Turntable();
 	PRG_Almacen();
-	PRG_LlenadoCajas();
+	PRG_Cintas();
+	PRG_PaneldeControl();
+	
+	IF GVL_Almacen.bSetaEmergencia THEN
+		PRG_RetiradaAlmacen();
+	END_IF
+	
 END_IF
 
 IF NOT GVL_General.bSetaEmergencia THEN
 	POU_SetaEmergencia();
 END_IF
-
-
 
 
 
@@ -126,19 +130,27 @@ END_IF
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="763" Count="12" />
-      <LineId Id="849" Count="0" />
       <LineId Id="786" Count="0" />
       <LineId Id="535" Count="0" />
       <LineId Id="841" Count="0" />
       <LineId Id="536" Count="6" />
-      <LineId Id="861" Count="0" />
-      <LineId Id="543" Count="7" />
-      <LineId Id="863" Count="2" />
+      <LineId Id="891" Count="0" />
+      <LineId Id="543" Count="2" />
+      <LineId Id="898" Count="0" />
+      <LineId Id="546" Count="4" />
+      <LineId Id="863" Count="1" />
+      <LineId Id="877" Count="0" />
+      <LineId Id="900" Count="3" />
+      <LineId Id="899" Count="0" />
+      <LineId Id="904" Count="0" />
       <LineId Id="551" Count="0" />
-      <LineId Id="557" Count="7" />
+      <LineId Id="557" Count="3" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="880" Count="0" />
+      <LineId Id="564" Count="0" />
       <LineId Id="776" Count="4" />
       <LineId Id="565" Count="1" />
-      <LineId Id="787" Count="50" />
+      <LineId Id="787" Count="49" />
       <LineId Id="567" Count="0" />
       <LineId Id="753" Count="4" />
       <LineId Id="840" Count="0" />

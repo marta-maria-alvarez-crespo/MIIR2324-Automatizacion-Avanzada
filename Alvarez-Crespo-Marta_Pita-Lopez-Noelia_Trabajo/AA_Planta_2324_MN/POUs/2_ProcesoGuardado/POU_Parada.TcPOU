@@ -16,6 +16,9 @@ VAR
 	StopBladeM: FB_StopBlade;
 	CintaM: 	FB_Cinta;
 	
+	bBloqueoPusherA: BOOL;
+	bBloqueoPusherV: BOOL;
+	bBloqueoPusherM: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -53,25 +56,38 @@ CintaM(
 	CINTA=> GVL_General.sBeltConveyor.bCintaMetal1);
 
 
-// CONTROL DEL STOPBLADE DE ENTRADA	
+// CONTROL DE ENTRADA	
 
 (* Se tiene en cuenta el llenado de una línea. En caso de que una línea no pueda continuar abarcando
-la entrada de piezas, se acciona el StopBlade general de entrada, evitando que entren más piezas a la línea,
-pero permitiendo que el resto de líneas puedan continuar procesando sus elementos *)
+la entrada de piezas, se impide la activación del pusher correspondiente. (Se puede hacer en un FB, no
+está hecho así porque me estoy muriendo *)
 
 IF (
 	POU_PositionerAzul.TengoUnaPiezaA AND POU_PickAndPlace.RobotSeMueveA 
 		AND EstoyBloqueandoA AND NOT GVL_General.sBeltConveyor.bCintaAzul1 ) 
-	OR (POU_PositionerAzul.TengoUnaPiezaV AND POU_PickAndPlace.RobotSeMueveV 
-		AND EstoyBloqueandoV AND NOT GVL_General.sBeltConveyor.bCintaVerde1) 
-	OR (POU_PositionerAzul.TengoUnaPiezaM AND POU_PickAndPlace.RobotSeMueveM 
-		AND EstoyBloqueandoM AND NOT GVL_General.sBeltConveyor.bCintaMetal1) 
 THEN
-	GVL_General.bStopBlade1 := TRUE;
+	bBloqueoPusherA := TRUE;
 ELSE
-	GVL_General.bStopBlade1 := FALSE;
+	bBloqueoPusherA := FALSE;
 END_IF
 
+IF (
+	POU_PositionerAzul.TengoUnaPiezaV AND POU_PickAndPlace.RobotSeMueveV 
+		AND EstoyBloqueandoV AND NOT GVL_General.sBeltConveyor.bCintaVerde1 ) 
+THEN
+	bBloqueoPusherV := TRUE;
+ELSE
+	bBloqueoPusherV := FALSE;
+END_IF	
+
+IF (
+	POU_PositionerAzul.TengoUnaPiezaM AND POU_PickAndPlace.RobotSeMueveM 
+		AND EstoyBloqueandoM AND NOT GVL_General.sBeltConveyor.bCintaMetal1) 
+THEN
+	bBloqueoPusherM := TRUE;
+ELSE
+	bBloqueoPusherM := FALSE;
+END_IF	
 ]]></ST>
     </Implementation>
     <LineIds Name="POU_Parada">
@@ -97,18 +113,26 @@ END_IF
       <LineId Id="289" Count="1" />
       <LineId Id="271" Count="0" />
       <LineId Id="291" Count="0" />
-      <LineId Id="282" Count="2" />
+      <LineId Id="282" Count="1" />
+      <LineId Id="374" Count="0" />
       <LineId Id="178" Count="0" />
       <LineId Id="218" Count="0" />
       <LineId Id="324" Count="0" />
       <LineId Id="328" Count="0" />
-      <LineId Id="326" Count="0" />
-      <LineId Id="329" Count="0" />
-      <LineId Id="325" Count="0" />
-      <LineId Id="330" Count="1" />
+      <LineId Id="331" Count="0" />
       <LineId Id="219" Count="2" />
       <LineId Id="179" Count="0" />
-      <LineId Id="292" Count="0" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="363" Count="3" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="361" Count="1" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="369" Count="3" />
+      <LineId Id="350" Count="0" />
       <LineId Id="300" Count="0" />
     </LineIds>
   </POU>

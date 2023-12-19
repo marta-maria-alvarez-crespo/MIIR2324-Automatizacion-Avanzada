@@ -18,17 +18,17 @@ a detectar el flanco de bajada del Diffuse Sensor, activando los pushers en el m
 // SECCIÓN AZUL
 PusherAzul(
 	SENSOR:= GVL_Sorting.bDiffuseSensorA, FRONTAL:= GVL_Sorting.sPusherA.PusherFrontLimit, 
-	CAMARA:= GVL_Sorting.bVisionSensorA, PUSHER=> GVL_Sorting.sPusherA.Pusher);
+	CAMARA:= GVL_Sorting.bVisionSensorA, BLOQUEOPUSHER := POU_Parada.bBloqueoPusherA, PUSHER=> GVL_Sorting.sPusherA.Pusher);
 
 // SECCIÓN VERDE
 PusherVerde(
 	SENSOR:= GVL_Sorting.bDiffuseSensorV, FRONTAL:= GVL_Sorting.sPusherV.PusherFrontLimit, 
-	CAMARA:= GVL_Sorting.bVisionSensorV, PUSHER=> GVL_Sorting.sPusherV.Pusher);
+	CAMARA:= GVL_Sorting.bVisionSensorV, BLOQUEOPUSHER := POU_Parada.bBloqueoPusherV, PUSHER=> GVL_Sorting.sPusherV.Pusher);
 
 // SECCIÓN METAL
 PusherMetal(
 	SENSOR:= GVL_Sorting.bDiffuseSensorM, FRONTAL:= GVL_Sorting.sPusherM.PusherFrontLimit, 
-	CAMARA:= GVL_Sorting.bVisionSensorM, PUSHER=> GVL_Sorting.sPusherM.Pusher);]]></ST>
+	CAMARA:= GVL_Sorting.bVisionSensorM, BLOQUEOPUSHER := POU_Parada.bBloqueoPusherM, PUSHER=> GVL_Sorting.sPusherM.Pusher);]]></ST>
     </Implementation>
     <LineIds Name="POU_ProcesoEntrada">
       <LineId Id="47" Count="0" />

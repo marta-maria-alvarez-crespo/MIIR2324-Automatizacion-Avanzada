@@ -4,6 +4,8 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	
+	(* Sensores y actuadores asociados al ciclo del Almacén*)
+	
 	{attribute 'OPC.UA.DA.StructuredType' := '1'}
 	sStackCraneRack: StrackerCraneRack;
 	
@@ -17,14 +19,35 @@ VAR_GLOBAL
 	{attribute 'OPC.UA.DA' := '1'}
 	bLoadingConveyor:BOOL;
 	
-	(*almacenamiento de datos de las diferentes posiciones*)
+	(* Almacenamiento de datos de las diferentes posiciones (no es necesario que sea una GVL) *)
 	aAlmacen: ARRAY[1..54] OF COLOR  :=[54(0)];
 	
-	
-	sSelector : Selector;
 
+	
+	(* Memoria del color solicitado (no es necesario que sea una GVL) *)
+	iSolicitudColor : INT;
+	
+	(* Botones de activación, paro y seta y elementos asociados al panel del Almacén *)
+	
+	{attribute 'OPC.UA.DA' := '1'}
 	Sacar: BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
 	bReset: BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	bSetaEmergencia: BOOL;
+	
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sSelector : Selector;
+	
+	{attribute 'OPC.UA.DA' := '1'}
+	iDisplay : INT;
+	{attribute 'OPC.UA.DA' := '1'}
+	LedAzul: BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	LedVerde: BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	LedMetal: BOOL;
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

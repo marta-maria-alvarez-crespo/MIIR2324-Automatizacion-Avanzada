@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_Cintas" Id="{13bfe8b4-6369-4a2c-ac5e-5e576921d46e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Cintas
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* Dependiendo de las detecciones de los sensores, se activarán según qué líneas*)
+
+IF NOT POU_PickAndPlace.CajaLlenaA THEN
+	IF GVL_ProcesoPalet.iLightArrayEmitterA THEN
+		GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1 := FALSE;
+	ELSE
+		GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1 := TRUE;
+	END_IF
+END_IF
+
+IF NOT POU_PickAndPlace.CajaLlenaV THEN
+	IF GVL_ProcesoPalet.iLightArrayEmitterV THEN
+		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := FALSE;
+	ELSE
+		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := TRUE;
+	END_IF
+END_IF
+
+IF NOT POU_PickAndPlace.CajaLlenaM THEN
+	IF GVL_ProcesoPalet.iLightArrayEmitterM THEN
+		GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1 := FALSE;
+	ELSE
+		GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1 := TRUE;
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Cintas">
+      <LineId Id="30" Count="0" />
+      <LineId Id="6" Count="23" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

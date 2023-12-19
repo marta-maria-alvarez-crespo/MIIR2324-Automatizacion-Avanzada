@@ -3,7 +3,10 @@
   <POU Name="POU_FinDeCiclo" Id="{d63d9367-255f-4c24-a9b7-23ae1156f199}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM POU_FinDeCiclo
 VAR
-	CONDICIONESPARO: CONDICIONESPARO;
+	bMemoriaP1 : BOOL;
+	bMemoriaP2 : BOOL;
+	bMemoriaP3 : BOOL;
+	bMemoriaP4 : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -11,70 +14,111 @@ END_VAR
 (* Cuando el operario pulsa fin de ciclo, se deja de ejecutar el bON de Main, saltando únicamente a este POU que controla el apagado 
 progresivo de los diferentes POUs *)
 
+	
 GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
 GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;	
 
 //FALTA EL DEL ALMACÉN DE SACAR CAJAS
-	
-IF POU_Contadores.bGuardandoCaja THEN
-	PRG_Almacen();
-	fb_ApagadoCintas();
-	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := FALSE;
-	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := FALSE;
-	GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := FALSE;	
-	
-ELSIF POU_Contadores.iProcesandoCintas > 0 THEN
-	FB_RollerConveyors();
-	
-ELSIF POU_Contadores.iCajaProcesando > 0 THEN	
-	fb_ApagadoCintas();
-	PRG_LlenadoCajas();
-	PRG_Turntable();
-	FB_RollerConveyors();
-	
-ELSIF POU_Contadores.iStackBoxProcesando > 0 THEN
-	fb_ApagadoCintas();
-	POU_PickAndPlace();
-	POU_PositionerAzul();
-	POU_Parada();
-	FB_RollerConveyors();
 
-ELSIF POU_Contadores.iCintaProcesando > 0 THEN
+IF POU_Contadores.iCintaProcesando > 0 THEN
 	POU_OnFabrica();
 	POU_ProcesoEntrada();
-	FB_RollerConveyors();	
-END_IF 
+	bMemoriaP1 := TRUE;
+	bMemoriaP4 := FALSE;
+END_IF
+
+IF POU_Contadores.iStackBoxProcesando > 0 OR bMemoriaP1 THEN
+	POU_PickAndPlace();
+	POU_PositionerAzul();
+	//POU_Parada();
+	bMemoriaP2 := TRUE;
+END_IF
+
+IF POU_Contadores.iCajaProcesando > 0 OR bMemoriaP2 THEN	
+	PRG_Turntable();
+	bMemoriaP3 := TRUE;
+	bMemoriaP1 := FALSE;
+END_IF
+	
+IF POU_Contadores.iProcesandoCintas > 0 OR bMemoriaP3 THEN
+	PRG_Almacen();
+	bMemoriaP4 := TRUE;
+	bMemoriaP2 := FALSE;
+END_IF	
+
+IF POU_Contadores.bGuardandoCaja OR bMemoriaP4 THEN
+	PRG_Almacen();
+	bMemoriaP3 := FALSE;
+	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := TRUE;
+	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := TRUE;
+	GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;
+ELSE
+	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := TRUE;
+	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := TRUE;
+	GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;
+END_IF
+
+IF POU_Contadores.iStackBoxProcesando = 0 THEN
+	GVL_General.sBeltConveyor.bCintaAzul1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde1	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaAzul2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal2 	:= FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := FALSE;
+ELSE
+	GVL_General.sBeltConveyor.bCintaAzul1 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaVerde1	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaMetal1 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaAzul2 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaVerde2 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaMetal2 	:= TRUE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := TRUE;
+END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="POU_FinDeCiclo">
       <LineId Id="818" Count="0" />
       <LineId Id="821" Count="1" />
-      <LineId Id="1000" Count="2" />
+      <LineId Id="1138" Count="1" />
+      <LineId Id="1001" Count="1" />
       <LineId Id="824" Count="0" />
       <LineId Id="1020" Count="0" />
+      <LineId Id="1169" Count="0" />
+      <LineId Id="1125" Count="2" />
+      <LineId Id="1132" Count="0" />
+      <LineId Id="1220" Count="0" />
+      <LineId Id="1120" Count="2" />
+      <LineId Id="1144" Count="2" />
+      <LineId Id="1133" Count="1" />
+      <LineId Id="1123" Count="0" />
+      <LineId Id="1148" Count="0" />
+      <LineId Id="1170" Count="0" />
       <LineId Id="1045" Count="0" />
-      <LineId Id="1022" Count="1" />
-      <LineId Id="1076" Count="0" />
-      <LineId Id="1109" Count="1" />
-      <LineId Id="1108" Count="0" />
-      <LineId Id="1111" Count="0" />
-      <LineId Id="1095" Count="0" />
-      <LineId Id="1104" Count="0" />
-      <LineId Id="1113" Count="0" />
-      <LineId Id="1024" Count="0" />
-      <LineId Id="1070" Count="2" />
-      <LineId Id="1105" Count="0" />
-      <LineId Id="1077" Count="0" />
-      <LineId Id="1080" Count="0" />
-      <LineId Id="1102" Count="0" />
-      <LineId Id="1083" Count="2" />
-      <LineId Id="1106" Count="0" />
-      <LineId Id="1035" Count="0" />
-      <LineId Id="1030" Count="0" />
-      <LineId Id="1053" Count="1" />
-      <LineId Id="1107" Count="0" />
-      <LineId Id="1021" Count="0" />
-      <LineId Id="1091" Count="0" />
+      <LineId Id="1217" Count="0" />
+      <LineId Id="1151" Count="2" />
+      <LineId Id="1203" Count="0" />
+      <LineId Id="1168" Count="0" />
+      <LineId Id="1218" Count="0" />
+      <LineId Id="1157" Count="0" />
+      <LineId Id="1154" Count="0" />
+      <LineId Id="1163" Count="1" />
+      <LineId Id="1219" Count="0" />
+      <LineId Id="1211" Count="1" />
+      <LineId Id="1210" Count="0" />
+      <LineId Id="1213" Count="0" />
+      <LineId Id="1215" Count="1" />
+      <LineId Id="1214" Count="0" />
+      <LineId Id="1160" Count="0" />
+      <LineId Id="1173" Count="0" />
+      <LineId Id="1172" Count="0" />
+      <LineId Id="1184" Count="5" />
+      <LineId Id="1174" Count="0" />
+      <LineId Id="1193" Count="0" />
+      <LineId Id="1195" Count="5" />
+      <LineId Id="1194" Count="0" />
+      <LineId Id="1175" Count="0" />
+      <LineId Id="1190" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,27 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="DINT_TO_COLOR" Id="{f8f2ea93-f0f1-4608-b775-42d6c2f0a68d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION DINT_TO_COLOR : COLOR
+  <POU Name="COLOR_TO_DINT" Id="{d4319650-a40d-48ab-a2c7-483a4b339edc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION COLOR_TO_DINT : DINT;
 VAR_INPUT
-	ENTRADA : DINT;
+	ENTRADA : COLOR;
 END_VAR
 VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[CASE ENTRADA OF
-	AZUL:
-	DINT_TO_COLOR := 2;
+	2:
+	DINT_TO_COLOR := AZUL;
 	
-	VERDE:
-	DINT_TO_COLOR := 5;
+	5:
+	DINT_TO_COLOR := VERDE;
 	
-	METAL:
-	DINT_TO_COLOR := 8;
+	8:
+	DINT_TO_COLOR := METAL;
 END_CASE]]></ST>
     </Implementation>
-    <LineIds Name="DINT_TO_COLOR">
-      <LineId Id="24" Count="8" />
+    <LineIds Name="COLOR_TO_DINT">
+      <LineId Id="17" Count="8" />
       <LineId Id="7" Count="0" />
     </LineIds>
   </POU>

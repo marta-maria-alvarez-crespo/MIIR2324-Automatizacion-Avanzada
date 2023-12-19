@@ -27,11 +27,6 @@ VAR
 	RobotSeMueveM: BOOL;
 	iContadorPyPM: INT;
 	CajaLlenaM: BOOL;
-	
-	
-	bResetAzul: BOOL;
-	bResetVerde: BOOL;
-	bResetMetal: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -42,7 +37,7 @@ uso de un CASE para controlar la posición del brazo, dividiendo su proceso por 
 PickAndPlaceA(
 	MOVIENDOZ:= GVL_StackBox.sPickAndPlaceA.bMovingZ, MOVIENDOX:= GVL_StackBox.sPickAndPlaceA.bMovingX, 
 	ROTANDO:= GVL_StackBox.sPickAndPlaceA.bRotating, DETECTADO:= GVL_StackBox.sPickAndPlaceA.bDetected, 
-	SENSOR:= GVL_StackBox.bDiffuseSensorPyPA, RESET := bResetAzul, ROBOTSEMUEVE=> RobotSeMueveA, 
+	SENSOR:= GVL_StackBox.bDiffuseSensorPyPA, RESET := PRG_Turntable.tRTrigEmitterA.Q, ROBOTSEMUEVE=> RobotSeMueveA, 
 	MOVERZ=> GVL_StackBox.sPickAndPlaceA.bMovementZ, MOVERX=> GVL_StackBox.sPickAndPlaceA.bMovementX, 
 	ROTARCCW=> GVL_StackBox.sPickAndPlaceA.bRotateCCW, ROTARCW=> GVL_StackBox.sPickAndPlaceA.bRotateCW, 
 	AGARRAR=> GVL_StackBox.sPickAndPlaceA.bGrab, CAJALLENA => CajaLlenaA);
@@ -52,7 +47,7 @@ PickAndPlaceA(
 PickAndPlaceV(
 	MOVIENDOZ:= GVL_StackBox.sPickAndPlaceV.bMovingZ, MOVIENDOX:= GVL_StackBox.sPickAndPlaceV.bMovingX, 
 	ROTANDO:= GVL_StackBox.sPickAndPlaceV.bRotating, DETECTADO:= GVL_StackBox.sPickAndPlaceV.bDetected, 
-	SENSOR:= GVL_StackBox.bDiffuseSensorPyPV, RESET := bResetVerde, ROBOTSEMUEVE=> RobotSeMueveV, 
+	SENSOR:= GVL_StackBox.bDiffuseSensorPyPV, RESET := PRG_Turntable.tRTrigEmitterV.Q, ROBOTSEMUEVE=> RobotSeMueveV, 
 	MOVERZ=> GVL_StackBox.sPickAndPlaceV.bMovementZ, MOVERX=> GVL_StackBox.sPickAndPlaceV.bMovementX, 
 	ROTARCCW=> GVL_StackBox.sPickAndPlaceV.bRotateCCW, ROTARCW=> GVL_StackBox.sPickAndPlaceV.bRotateCW, 
 	AGARRAR=> GVL_StackBox.sPickAndPlaceV.bGrab, CAJALLENA => CajaLlenaV);
@@ -61,7 +56,7 @@ PickAndPlaceV(
 PickAndPlaceM(
 	MOVIENDOZ:= GVL_StackBox.sPickAndPlaceM.bMovingZ, MOVIENDOX:= GVL_StackBox.sPickAndPlaceM.bMovingX, 
 	ROTANDO:= GVL_StackBox.sPickAndPlaceM.bRotating, DETECTADO:= GVL_StackBox.sPickAndPlaceM.bDetected, 
-	SENSOR:= GVL_StackBox.bDiffuseSensorPyPM, RESET := bResetMetal, ROBOTSEMUEVE=> RobotSeMueveM, 
+	SENSOR:= GVL_StackBox.bDiffuseSensorPyPM, RESET := PRG_Turntable.tRTrigEmitterM.Q, ROBOTSEMUEVE=> RobotSeMueveM, 
 	MOVERZ=> GVL_StackBox.sPickAndPlaceM.bMovementZ, MOVERX=> GVL_StackBox.sPickAndPlaceM.bMovementX, 
 	ROTARCCW=> GVL_StackBox.sPickAndPlaceM.bRotateCCW, ROTARCW=> GVL_StackBox.sPickAndPlaceM.bRotateCW, 
 	AGARRAR=> GVL_StackBox.sPickAndPlaceM.bGrab, CAJALLENA => CajaLlenaM);]]></ST>

@@ -4,15 +4,22 @@
     <Declaration><![CDATA[PROGRAM PRG_Turntable
 VAR
 	Turntable : CTURNTABLE;
-
-	SaleCajaA : BOOL;
-	SaleCajaV : BOOL;
-	SaleCajaM : BOOL;
 	
 	tFTrigDiffuseSensor	: F_TRIG;
 	tFTrigEmitterA: F_TRIG;
 	tFTrigEmitterV: F_TRIG;
 	tFTrigEmitterM: F_TRIG;
+	tRTrigEmitterA: R_TRIG;
+	tRTrigEmitterV: R_TRIG;
+	tRTrigEmitterM: R_TRIG;
+	
+	tRtrigCajaLlenaA: R_TRIG;
+	tRtrigCajaLlenaV: R_TRIG;
+	tRtrigCajaLlenaM: R_TRIG;
+	
+	bMemoriaAzul: BOOL;
+	bMemoriaVerde: BOOL;
+	bMemoriaMetal: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -20,65 +27,60 @@ END_VAR
 tFTrigEmitterA(CLK:= GVL_ProcesoPalet.iLightArrayEmitterA);
 tFTrigEmitterV(CLK:= GVL_ProcesoPalet.iLightArrayEmitterV);
 tFTrigEmitterM(CLK:= GVL_ProcesoPalet.iLightArrayEmitterM);
+tRTrigEmitterA(CLK:= GVL_ProcesoPalet.iLightArrayEmitterA);
+tRTrigEmitterV(CLK:= GVL_ProcesoPalet.iLightArrayEmitterV);
+tRTrigEmitterM(CLK:= GVL_ProcesoPalet.iLightArrayEmitterM);
+
+tRtrigCajaLlenaA(CLK:= POU_PickAndPlace.CajaLlenaA);
+tRtrigCajaLlenaV(CLK:= POU_PickAndPlace.CajaLlenaV);
+tRtrigCajaLlenaM(CLK:= POU_PickAndPlace.CajaLlenaM);
+
+GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;
+GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := TRUE;
+GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := TRUE;
+
+IF tRtrigCajaLlenaA.Q THEN
+	bMemoriaAzul := TRUE;
+END_IF
+
+IF tRtrigCajaLlenaV.Q THEN
+	bMemoriaVerde := TRUE;
+END_IF
+
+IF tRtrigCajaLlenaM.Q THEN
+	bMemoriaMetal := TRUE;
+END_IF
+
 
 CASE Turntable OF
 	
 	CTURNTABLE_ESPERA:
-	(* Dependiendo de las detecciones de los sensores, se activarám según qué líneas*)
+	(* Proceso espera *)
 	
-	IF POU_PickAndPlace.CajaLlenaA THEN
-		SaleCajaA := TRUE;
-		GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1 := TRUE;
-		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAzul1 := TRUE;
-		
-		IF tFTrigEmitterA.Q THEN
-			Turntable := CTURNTABLE_FILTROPRIORIDAD;
+		IF bMemoriaAzul THEN
+			TURNTABLE := CTURNTABLE_CARGAAZUL;
 		END_IF
-	END_IF
-	
-	IF POU_PickAndPlace.CajaLlenaV THEN
-		SaleCajaV := TRUE;
-		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := TRUE;
-		Turntable := CTURNTABLE_FILTROPRIORIDAD;
 		
-		IF tFTrigEmitterV.Q THEN
-			Turntable := CTURNTABLE_FILTROPRIORIDAD;
+		
+		IF bMemoriaVerde THEN
+			TURNTABLE := CTURNTABLE_CARGAVERDE;
 		END_IF
-	END_IF
-	
-	IF POU_PickAndPlace.CajaLlenaM THEN
-		SaleCajaM := TRUE;
-		GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1 := TRUE;
-		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerMetal1 := TRUE;
 		
-		IF tFTrigEmitterM.Q THEN
-			Turntable := CTURNTABLE_FILTROPRIORIDAD;
+		
+		IF bMemoriaMetal THEN
+			TURNTABLE := CTURNTABLE_CARGAMETAL;
 		END_IF
-	END_IF
-
-	
-	CTURNTABLE_FILTROPRIORIDAD:
-	(* Dependiendo de las detecciones de los sensores, se girará a una posición u otra*)
-	
-	IF GVL_ProcesoPalet.bDiffuseSensorPaletA THEN
-		SaleCajaA := FALSE;
-		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAzul1 := FALSE;
-		TURNTABLE := CTURNTABLE_CARGAAZUL;
-	END_IF
-	
-	IF GVL_ProcesoPalet.bDiffuseSensorPaletV THEN
-		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := FALSE;
-		TURNTABLE := CTURNTABLE_CARGAVERDE;
-	END_IF
-	
-	IF GVL_ProcesoPalet.bDiffuseSensorPaletM THEN
-		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerMetal1 := FALSE;
-		TURNTABLE := CTURNTABLE_CARGAMETAL;
-	END_IF
-		
 	
 	CTURNTABLE_CARGAAZUL:
 	(* Proceso de carga para la caja azul *)
+	
+	IF GVL_ProcesoPalet.bDiffuseSensorPaletA THEN
+		GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1 := FALSE;
+		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAzul1 := FALSE;
+	ELSE
+		GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1 := TRUE;
+		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAzul1 := TRUE;
+	END_IF
 	
 	GVL_ProcesoPalet.sTurnTable.Turn := TRUE;
 	GVL_ProcesoPalet.sTurnTable.RollPositivo := TRUE;
@@ -99,6 +101,7 @@ CASE Turntable OF
 	
 	IF GVL_ProcesoPalet.sTurnTable.Limit0 THEN
 		GVL_ProcesoPalet.sTurnTable.RollPositivo := TRUE;
+		bMemoriaAzul := FALSE;
 		TURNTABLE := CTURNTABLE_SALIDA;
 	END_IF
 	
@@ -106,16 +109,32 @@ CASE Turntable OF
 	CTURNTABLE_CARGAVERDE:
 	(* Proceso de carga para la caja verde *)
 	
+	IF GVL_ProcesoPalet.bDiffuseSensorPaletV THEN
+		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := FALSE;
+	ELSE
+		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := TRUE;
+	END_IF
+	
 	GVL_ProcesoPalet.sTurnTable.Turn := FALSE;
+	
 	IF GVL_ProcesoPalet.sTurnTable.Limit0 THEN
 		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := TRUE;
 		GVL_ProcesoPalet.sTurnTable.RollPositivo := TRUE;
+		bMemoriaVerde := FALSE;
 		TURNTABLE := CTURNTABLE_SALIDA;
 	END_IF
 	
 	
 	CTURNTABLE_CARGAMETAL:
 	(* Proceso de carga para la caja azul *)
+	
+	IF GVL_ProcesoPalet.bDiffuseSensorPaletM THEN
+		GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1 := FALSE;
+		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerMetal1 := FALSE;
+	ELSE
+		GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1 := TRUE;
+		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerMetal1 := TRUE;
+	END_IF
 	
 	GVL_ProcesoPalet.sTurnTable.Turn := TRUE;
 	GVL_ProcesoPalet.sTurnTable.RollNegativo := TRUE;
@@ -136,12 +155,12 @@ CASE Turntable OF
 	
 	IF GVL_ProcesoPalet.sTurnTable.Limit0 THEN
 		GVL_ProcesoPalet.sTurnTable.RollPositivo := TRUE;
+		bMemoriaMetal := FALSE;
 		TURNTABLE := CTURNTABLE_SALIDA;
 	END_IF
 	
 	
 	CTURNTABLE_SALIDA:
-
 	IF tFTrigDiffuseSensor.Q THEN
 		TURNTABLE := CTURNTABLE_ESPERA;
 		GVL_ProcesoPalet.sTurnTable.RollPositivo := FALSE;
@@ -152,61 +171,31 @@ END_CASE]]></ST>
     <LineIds Name="PRG_Turntable">
       <LineId Id="301" Count="1" />
       <LineId Id="307" Count="1" />
-      <LineId Id="341" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="255" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="259" Count="0" />
-      <LineId Id="170" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="310" Count="0" />
-      <LineId Id="314" Count="0" />
-      <LineId Id="311" Count="1" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="315" Count="0" />
-      <LineId Id="317" Count="1" />
-      <LineId Id="316" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="281" Count="0" />
-      <LineId Id="172" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="323" Count="0" />
-      <LineId Id="320" Count="1" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="109" Count="0" />
-      <LineId Id="296" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="94" Count="0" />
-      <LineId Id="279" Count="0" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="260" Count="0" />
-      <LineId Id="99" Count="0" />
-      <LineId Id="110" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="100" Count="1" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="107" Count="0" />
-      <LineId Id="102" Count="1" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="106" Count="0" />
+      <LineId Id="356" Count="1" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="532" Count="0" />
+      <LineId Id="537" Count="2" />
+      <LineId Id="552" Count="1" />
+      <LineId Id="599" Count="1" />
+      <LineId Id="598" Count="0" />
+      <LineId Id="556" Count="2" />
+      <LineId Id="560" Count="3" />
+      <LineId Id="565" Count="2" />
+      <LineId Id="554" Count="0" />
+      <LineId Id="573" Count="0" />
       <LineId Id="166" Count="0" />
       <LineId Id="95" Count="0" />
+      <LineId Id="450" Count="1" />
+      <LineId Id="510" Count="1" />
+      <LineId Id="540" Count="11" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="363" Count="0" />
       <LineId Id="55" Count="0" />
       <LineId Id="71" Count="0" />
-      <LineId Id="91" Count="0" />
+      <LineId Id="500" Count="1" />
+      <LineId Id="503" Count="0" />
+      <LineId Id="506" Count="3" />
+      <LineId Id="504" Count="1" />
       <LineId Id="87" Count="0" />
       <LineId Id="92" Count="0" />
       <LineId Id="115" Count="0" />
@@ -219,24 +208,39 @@ END_CASE]]></ST>
       <LineId Id="119" Count="2" />
       <LineId Id="123" Count="0" />
       <LineId Id="128" Count="3" />
+      <LineId Id="577" Count="0" />
       <LineId Id="141" Count="0" />
       <LineId Id="144" Count="0" />
       <LineId Id="150" Count="0" />
       <LineId Id="183" Count="0" />
-      <LineId Id="185" Count="3" />
+      <LineId Id="185" Count="1" />
+      <LineId Id="520" Count="0" />
+      <LineId Id="514" Count="1" />
+      <LineId Id="517" Count="1" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="512" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="521" Count="0" />
       <LineId Id="205" Count="0" />
       <LineId Id="238" Count="0" />
       <LineId Id="206" Count="0" />
+      <LineId Id="576" Count="0" />
       <LineId Id="252" Count="0" />
       <LineId Id="184" Count="0" />
       <LineId Id="209" Count="0" />
       <LineId Id="239" Count="0" />
-      <LineId Id="211" Count="22" />
+      <LineId Id="211" Count="2" />
+      <LineId Id="526" Count="5" />
+      <LineId Id="524" Count="1" />
+      <LineId Id="214" Count="9" />
+      <LineId Id="522" Count="0" />
+      <LineId Id="225" Count="7" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="233" Count="0" />
       <LineId Id="210" Count="0" />
       <LineId Id="151" Count="0" />
       <LineId Id="282" Count="0" />
       <LineId Id="145" Count="0" />
-      <LineId Id="152" Count="0" />
       <LineId Id="147" Count="0" />
       <LineId Id="149" Count="0" />
       <LineId Id="249" Count="0" />

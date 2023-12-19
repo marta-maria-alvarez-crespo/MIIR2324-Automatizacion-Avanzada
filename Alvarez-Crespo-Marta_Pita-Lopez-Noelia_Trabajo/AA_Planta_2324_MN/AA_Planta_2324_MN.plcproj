@@ -85,12 +85,6 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\0_ControlEncendido\FB_ApagadoCintas.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\0_ControlEncendido\FB_RollerConveyors.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\0_ControlEncendido\POU_FinDeCiclo.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -103,16 +97,16 @@
     <Compile Include="POUs\0_ControlEncendido\POU_StopBladePyP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\3_ProcesoPalet\FB_Emitter.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\3_ProcesoPalet\PRG_LlenadoCajas.TcPOU">
+    <Compile Include="POUs\3_ProcesoPalet\PRG_Cintas.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3_ProcesoPalet\PRG_Turntable.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Almacen\DINT_TO_COLOR.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\4_Almacen\COLOR_TO_DINT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Almacen\PRG_Almacen.TcPOU">

@@ -4,83 +4,81 @@
     <Declaration><![CDATA[PROGRAM PRG_PanelDeControl
 VAR
 	tRTrigSacar			: R_TRIG;
-	
-	iCantidad: INT := 0;
-	iSolicitudColor: COLOR;
-	iSolicitud: INT := 0;
-	i: INT;
-	iPosicion: INT;
-	LECTURA: COLOR;
+
+	i: INT := 1;
 	bReset : BOOL;
+	iSolicitudColor: COLOR;
 END_VAR
-]]></Declaration>
+
+VAR_INPUT
+	iSolicitud: INT := 0;
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[tRTrigSacar (CLK:= GVL_Almacen.Sacar);
+      <ST><![CDATA[tRTrigSacar(CLK:= GVL_Almacen.Sacar);
 
-(* Rosca de selección del tipo de caja. Botón verde para seleccionar el color deseado. Se va al infinito por eso de que revisa el for todo el rato
-entonces suma lo que ya ha sumado. Lo que quiero es que cada vez que detecte el cambio de posición, recorra todo el for una vez...  Pero así no se 
-actualizaría en tiempo real, y yo quiero que se actualice en tiempo real. Pensé en ponerlo en uun case donde la condicion de que cuando llegue a 54 
-haga el salto de CASE hasta otro flanco de subida -> Esto impide que se actualice el valor si se va rellenando... *)
-	
-IF GVL_Almacen.sSelector.StateAzul THEN
-	iSolicitudColor := AZUL;
-	FOR i := 1 TO 54 BY 1 DO
-		IF	GVL_Almacen.aAlmacen[i] = AZUL THEN
-			iCantidad := iCantidad + 1;
-		END_IF
-	END_FOR
-END_IF
+(* Aquí sumamos el número de cajas a sacar, que nunca puede ser mayor de las que hay *)
 
-IF NOT GVL_Almacen.sSelector.StateMetal AND NOT GVL_Almacen.sSelector.StateAzul THEN
-	iSolicitudColor := VERDE;
-	FOR i := 1 TO 54 BY 1 DO
-		IF	GVL_Almacen.aAlmacen[i] = VERDE THEN
-			iCantidad := iCantidad + 1;
-		END_IF
-	END_FOR
-END_IF
-
-IF GVL_Almacen.sSelector.StateMetal THEN
-	iSolicitudColor := METAL;
-	FOR i := 1 TO 54 BY 1 DO
-		IF	GVL_Almacen.aAlmacen[i] = METAL THEN
-			iCantidad := iCantidad + 1;
-		END_IF
-	END_FOR
-END_IF
-
-(* BOTÓN VERDE: Aquí sumamos el número de cajas a sacar, que nunca puede ser mayor de las que hay *)
-
-IF tRTrigSacar.Q AND iSolicitud <= iCantidad THEN
+IF tRTrigSacar.Q THEN
 	iSolicitud := iSolicitud + 1;
 END_IF
-
 
 (* BOTÓN NARANJA. Paro fin de ciclo *)
 
 IF GVL_Almacen.bReset THEN
 	bReset := TRUE;
-	IF PRG_RetiradaAlmacen.SELECCION = 3 THEN
+END_IF
+
+IF bReset AND PRG_RetiradaAlmacen.SELECCION > 2 THEN
 		iSolicitud := 1;
-	END_IF
+END_IF
+
+
+(* Rosca de selección del tipo de caja *)
+	
+IF GVL_Almacen.sSelector.StateAzul THEN
+	GVL_Almacen.LedAzul := TRUE;
+	GVL_Almacen.LedVerde := FALSE;
+	GVL_Almacen.LedMetal := FALSE;
+	iSolicitudColor := AZUL;
+	GVL_Almacen.iDisplay := PRG_Almacen.iCantidadAzul;
+END_IF
+
+IF NOT GVL_Almacen.sSelector.StateMetal AND NOT GVL_Almacen.sSelector.StateAzul THEN
+	GVL_Almacen.LedAzul := FALSE;
+	GVL_Almacen.LedVerde := TRUE;
+	GVL_Almacen.LedMetal := FALSE;
+	iSolicitudColor := VERDE;
+	GVL_Almacen.iDisplay := PRG_Almacen.iCantidadVerde;
+END_IF
+
+IF GVL_Almacen.sSelector.StateMetal THEN
+	GVL_Almacen.LedAzul := FALSE;
+	GVL_Almacen.LedVerde := FALSE;
+	GVL_Almacen.LedMetal := TRUE;
+	iSolicitudColor := METAL;
+	GVL_Almacen.iDisplay := PRG_Almacen.iCantidadMetal;
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="PRG_PanelDeControl">
-      <LineId Id="6" Count="0" />
-      <LineId Id="11" Count="1" />
-      <LineId Id="56" Count="1" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="131" Count="5" />
+      <LineId Id="138" Count="8" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="11" Count="0" />
       <LineId Id="59" Count="0" />
-      <LineId Id="15" Count="31" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="69" Count="1" />
-      <LineId Id="65" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="103" Count="2" />
+      <LineId Id="125" Count="1" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="107" Count="1" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="127" Count="1" />
+      <LineId Id="32" Count="2" />
+      <LineId Id="111" Count="1" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="41" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
