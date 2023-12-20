@@ -50,7 +50,7 @@ bRTrigDiffSensorPyP(CLK:= SENSOR);
 bConterTrigger(CLK:= ROTARCW);
 tRecogidaBrazo(IN:= NOT MOVERZ, PT:= T#1S);
 
-CONTADOR(CU:= bConterTrigger.Q, RESET:=RESET, PV:= 3, Q=> CAJALLENA);
+CONTADOR(CU:= bConterTrigger.Q, RESET:=RESET, PV:= 5, Q=> CAJALLENA);
 
 CASE CPICKANDPLACE OF
 	
