@@ -3,20 +3,24 @@
   <POU Name="PRG_RetiradaAlmacen" Id="{3c072e24-b3a5-4d0d-b488-8a342df77b82}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_RetiradaAlmacen
 VAR
-	iPosicion : INT;
-	iCantidad: INT := 0;
-	AlmacenSacando: BOOL;
 	
-	SELECCION: INT := 1;
+	// Variables para almacenar la posición de almacenamiento y para el control del FOR
+	iPosicion : INT;
 	j: INT := 1;
 	
+	// Variable de control para conocer el estado de la máquina y permitir su coordinación con el proceso del almacén
+	AlmacenSacando: BOOL;
+	
+	// VALORES DEL CASE
+	SELECCION: CRETIRADA := CRETIRADA_ESPERA;
+	
+	// Function Blocks de cambios de flanco, timers...
 	fTrigRRefSensorAlmacen	: F_TRIG;
 	fTrigLift				: F_TRIG;
 	rTrigLift				: F_TRIG;
 	fTrigMovingX			: F_TRIG;
-	
-	tTimerRack : TON;
-	tTimerRack2 : TON;
+	tTimerRack 				: TON;
+	tTimerRack2 			: TON;
 
 END_VAR
 ]]></Declaration>
@@ -30,41 +34,42 @@ tTimerRack2(IN:=GVL_Almacen.sStackCraneRack.Lift, PT:=T#3S);
 
 (* Dejamos activadas las cintas durante todo el proceso *)
 
-GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen3 := TRUE;
-GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen3 := TRUE;
+GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen3 := TRUE;
+GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen4 := TRUE;
 
 CASE SELECCION OF
 
-	1:
-	(* Cada vez que el operario pulsa el botón verde, se inicia el proceso de sacar una caja del almacen *)
+	CRETIRADA_ESPERA:
+	(* Si existe solicitud de salida del almacén y se ha terminado el proceso de guardado, se podrá activar el
+	   proceso de salida del almacén, cambiando el valor del CASE *)
 	
 		IF PRG_PanelDeControl.iSolicitud > 0 AND NOT PRG_Almacen.bAlmacenGuardando THEN
 			AlmacenSacando := TRUE;
-			SELECCION := 2;
+			SELECCION := CRETIRADA_BUSQUEDA;
 			j := 0;
 		
 		END_IF
 		
-	2:
-	(* El almacén busca la primera posición con ese color *)
+	CRETIRADA_BUSQUEDA:
+	(* El almacén busca la primera posición con el color solicitado a través del selector *)
 	
 		GVL_Almacen.sStackCraneRack.Left := FALSE;
-
 		IF PRG_PanelDeControl.iSolicitud > 0 THEN
-			FOR j := 1 TO 54 BY 1 DO
+			FOR j := 1 TO 54 DO
 				IF	GVL_Almacen.aAlmacen[j] = PRG_PanelDeControl.iSolicitudColor THEN
 					iPosicion := j;
-					SELECCION := 3;
+					GVL_Almacen.aAlmacen[j] := VACIO;
+					SELECCION := CRETIRADA_RECOGIDA;
 					EXIT;
 				ELSIF j = 55 THEN
-					SELECCION := 1;
+					SELECCION := CRETIRADA_ESPERA;
 				END_IF
 			END_FOR
 		ELSE
 			SELECCION := 1;
 		END_IF
 	
-	3:
+	CRETIRADA_RECOGIDA:
 	(* El almacén recoge la caja de la posición marcada *)
 
 		GVL_Almacen.sStackCraneRack.Right := FALSE;
@@ -80,10 +85,10 @@ CASE SELECCION OF
 		
 		IF GVL_Almacen.sStackCraneRack.LeftLimit THEN
 			GVL_Almacen.sStackCraneRack.Lift := TRUE;
-			SELECCION := 4;
+			SELECCION := CRETIRADA_TRANSPORTE;
 		END_IF	
 	
-	4:
+	CRETIRADA_TRANSPORTE:
 	(* El almacén lleva la caja a su sitio *)
 	
 		IF fTrigLift.Q THEN
@@ -96,17 +101,20 @@ CASE SELECCION OF
 		
 		IF fTrigMovingX.Q AND GVL_Almacen.sStackCraneRack.TargetPosition = 55 THEN
 			GVL_Almacen.sStackCraneRack.Lift := TRUE;
-			SELECCION := 5;
+			SELECCION := CRETIRADA_COLOCACION;
 		END_IF
 
-	5:
-		
+	CRETIRADA_COLOCACION:
+	(* El almacén se coloca para depositar la caja sobre el LoadingConveyor *)
+	
 		IF tTimerRack2.Q THEN
 			GVL_Almacen.sStackCraneRack.Left := TRUE;
-			SELECCION := 6;
+			SELECCION := CRETIRADA_PARTIDA;
 		END_IF	
 	
-	6:
+	CRETIRADA_PARTIDA:
+	(* Una vez colocado, desciende hasta dejar la caja sobre los rodillos y dejarla partir *)
+
 		IF GVL_Almacen.sStackCraneRack.LeftLimit THEN
 			GVL_Almacen.sStackCraneRack.Lift := FALSE;
 			
@@ -124,13 +132,15 @@ CASE SELECCION OF
 					PRG_Almacen.iCantidadMetal := PRG_Almacen.iCantidadMetal - 1;
 				END_IF
 				
-				GVL_Almacen.aAlmacen[j] := VACIO;
 				PRG_PanelDeControl.iSolicitud := PRG_PanelDeControl.iSolicitud - 1;
 				AlmacenSacando := FALSE;
-				SELECCION := 2;
+				SELECCION := CRETIRADA_BUSQUEDA;
+				
 			END_IF
 		END_IF
-END_CASE]]></ST>
+		
+END_CASE
+]]></ST>
     </Implementation>
     <LineIds Name="PRG_RetiradaAlmacen">
       <LineId Id="197" Count="1" />
@@ -146,7 +156,7 @@ END_CASE]]></ST>
       <LineId Id="45" Count="0" />
       <LineId Id="39" Count="0" />
       <LineId Id="165" Count="0" />
-      <LineId Id="170" Count="0" />
+      <LineId Id="483" Count="1" />
       <LineId Id="103" Count="0" />
       <LineId Id="384" Count="0" />
       <LineId Id="104" Count="0" />
@@ -158,9 +168,9 @@ END_CASE]]></ST>
       <LineId Id="66" Count="0" />
       <LineId Id="427" Count="0" />
       <LineId Id="246" Count="0" />
-      <LineId Id="426" Count="0" />
       <LineId Id="214" Count="0" />
       <LineId Id="174" Count="2" />
+      <LineId Id="491" Count="0" />
       <LineId Id="224" Count="0" />
       <LineId Id="179" Count="0" />
       <LineId Id="185" Count="1" />
@@ -191,11 +201,13 @@ END_CASE]]></ST>
       <LineId Id="403" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="412" Count="0" />
+      <LineId Id="487" Count="0" />
       <LineId Id="415" Count="1" />
       <LineId Id="424" Count="0" />
       <LineId Id="404" Count="0" />
       <LineId Id="419" Count="0" />
       <LineId Id="425" Count="0" />
+      <LineId Id="488" Count="1" />
       <LineId Id="406" Count="1" />
       <LineId Id="461" Count="0" />
       <LineId Id="422" Count="0" />
@@ -212,11 +224,13 @@ END_CASE]]></ST>
       <LineId Id="450" Count="0" />
       <LineId Id="459" Count="0" />
       <LineId Id="453" Count="0" />
-      <LineId Id="452" Count="0" />
       <LineId Id="408" Count="2" />
+      <LineId Id="495" Count="0" />
       <LineId Id="423" Count="0" />
       <LineId Id="405" Count="0" />
+      <LineId Id="492" Count="0" />
       <LineId Id="54" Count="0" />
+      <LineId Id="493" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -4,7 +4,6 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	bON: BOOL; 
-	bOFF: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -22,8 +21,16 @@ Máster Universitario en Informática Industrial y Robótica
 	Marta María Álvarez Crespo - Noelia Pita López  		
 *)
 
-POU_StopBladePyP();
+
+
+(* PRGs siempre activos, necesarios para el correcto control de la fábrica *)
+PRG_StopBladePyP();
 POU_Contadores();
+
+
+(* Cuando se pulsa el botón verde, se activa la fábrica y solo se detendrá en caso de que se pulse el botón de paro o la seta de emergencia.
+En el caso del botón de paro, desactivará el valor de bON de forma que se llame a un POU diferente a los llamados en este MAIN, donde el proceso
+se detiene progresivamente *)
 
 IF GVL_General.bMarcha THEN
 	bON := TRUE;
@@ -31,16 +38,20 @@ END_IF
 
 IF NOT GVL_General.bParo THEN
 	bON := FALSE;
-	POU_FinDeCiclo();
 END_IF
+
+IF NOT bON THEN
+	PRG_FinDeCiclo();
+END_IF
+
 
 IF bON AND GVL_General.bSetaEmergencia THEN
 	
-	POU_OnFabrica();
-	POU_ProcesoEntrada();
-	POU_PickAndPlace();
-	POU_PositionerAzul();
-	POU_Parada();
+	PRG_OnFabrica();
+	PRG_ProcesoEntrada();
+	PRG_PickAndPlace();
+	PRG_Positioner();
+	PRG_Parada();
 	PRG_Turntable();
 	PRG_Almacen();
 	PRG_Cintas();
@@ -53,7 +64,7 @@ IF bON AND GVL_General.bSetaEmergencia THEN
 END_IF
 
 IF NOT GVL_General.bSetaEmergencia THEN
-	POU_SetaEmergencia();
+	PRG_SetaEmergencia();
 END_IF
 
 
@@ -130,13 +141,20 @@ END_IF
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="763" Count="12" />
+      <LineId Id="925" Count="2" />
       <LineId Id="786" Count="0" />
       <LineId Id="535" Count="0" />
       <LineId Id="841" Count="0" />
-      <LineId Id="536" Count="6" />
-      <LineId Id="891" Count="0" />
-      <LineId Id="543" Count="2" />
-      <LineId Id="898" Count="0" />
+      <LineId Id="919" Count="0" />
+      <LineId Id="928" Count="0" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="929" Count="2" />
+      <LineId Id="537" Count="6" />
+      <LineId Id="914" Count="0" />
+      <LineId Id="912" Count="0" />
+      <LineId Id="915" Count="2" />
+      <LineId Id="544" Count="1" />
+      <LineId Id="911" Count="0" />
       <LineId Id="546" Count="4" />
       <LineId Id="863" Count="1" />
       <LineId Id="877" Count="0" />

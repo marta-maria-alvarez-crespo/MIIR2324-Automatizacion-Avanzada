@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="CALMACENAMIENTO" Id="{165ffa71-5d5d-4b7f-a895-c9fd7664f2b7}">
+    <Declaration><![CDATA[{attribute 'strict'}
+TYPE CALMACENAMIENTO :
+(
+	CALMACEN_ESPERA,
+	CALMACEN_MONTARPALLET,
+	CALMACEN_BUSQUEDA,
+	CALMACEN_GUARDADO,
+	CALMACEN_LLENO,
+	CALMACEN_ORIGEN
+	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

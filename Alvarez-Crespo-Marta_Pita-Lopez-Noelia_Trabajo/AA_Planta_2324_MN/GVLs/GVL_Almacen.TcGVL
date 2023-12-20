@@ -23,7 +23,6 @@ VAR_GLOBAL
 	aAlmacen: ARRAY[1..54] OF COLOR  :=[54(0)];
 	
 
-	
 	(* Memoria del color solicitado (no es necesario que sea una GVL) *)
 	iSolicitudColor : INT;
 	

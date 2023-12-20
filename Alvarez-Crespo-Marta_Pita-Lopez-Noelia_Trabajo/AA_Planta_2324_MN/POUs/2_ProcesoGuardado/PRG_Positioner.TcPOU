@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_Positioner" Id="{56ecadac-53bb-442a-ac6b-9b88dc95e92f}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Positioner
+VAR
+(* =============================================================================================== *)
+(*                                  CONTROL DE LOS POSITIONER                                      *)
+(* =============================================================================================== *)
+(* ---------------------------------------- PIEZAS AZULES ---------------------------------------- *)
+	PositionerA: FB_Positioner;
+	TengoUnaPiezaA : BOOL;
+	
+(* ---------------------------------------- PIEZAS VERDES ---------------------------------------- *)
+
+	PositionerV: FB_Positioner;
+	TengoUnaPiezaV : BOOL;
+	
+(* ---------------------------------------- PIEZAS METAL ----------------------------------------- *)
+	PositionerM: FB_Positioner;
+	TengoUnaPiezaM : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* El Positioner se encarga de centrar las piezas. Para ello, se tiene que controlar su activación en
+función de la velocidad de procesado de la estación siguiente (el Pick-And-Place. Para ello, se agregan
+variables que permiten conocer el estado del robot siguiente, apagando o encendiendo los procesos del
+Positioner en funciión de sus tiempos de procesado. Además, se ajusta mediante timers la velocidad de 
+bajada del positioner, permitiendo que las piezas pasen correctamente por la línea *)
+
+// PIEZAS AZULES
+PositionerA(
+	SENSOR1:= GVL_StackBox.bRReflectiveSensorA1, SENSOR3:= GVL_StackBox.bRReflectiveSensorA3, 
+	SENSORPYP:= GVL_StackBox.bDiffuseSensorPyPA, CLAMPED:= GVL_StackBox.sPosLeftBarA.bClamped, 
+	ROBOTSEMUEVE:= PRG_PickAndPlace.RobotSeMueveA, LIMITE:= GVL_StackBox.sPosLeftBarA.bLimit, 
+	TENGOUNAPIEZA=> TengoUnaPiezaA, RAISE=> GVL_StackBox.sPosLeftBarA.bRaise, 
+	CLAMP=> GVL_StackBox.sPosLeftBarA.bClamp );
+
+// PIEZAS VERDES
+PositionerV(
+	SENSOR1:= GVL_StackBox.bRReflectiveSensorV1, SENSOR3:= GVL_StackBox.bRReflectiveSensorV3, 
+	SENSORPYP:= GVL_StackBox.bDiffuseSensorPyPV, CLAMPED:= GVL_StackBox.sPosLeftBarV.bClamped, 
+	ROBOTSEMUEVE:= PRG_PickAndPlace.RobotSeMueveV, LIMITE:= GVL_StackBox.sPosLeftBarV.bLimit, 
+	TENGOUNAPIEZA=> TengoUnaPiezaV, RAISE=> GVL_StackBox.sPosLeftBarV.bRaise, 
+	CLAMP=> GVL_StackBox.sPosLeftBarV.bClamp );
+
+// PIEZAS METAL
+PositionerM(
+	SENSOR1:= GVL_StackBox.bRReflectiveSensorM1, SENSOR3:= GVL_StackBox.bRReflectiveSensorM3, 
+	SENSORPYP:= GVL_StackBox.bDiffuseSensorPyPM, CLAMPED:= GVL_StackBox.sPosLeftBarM.bClamped, 
+	ROBOTSEMUEVE:= PRG_PickAndPlace.RobotSeMueveM, LIMITE:= GVL_StackBox.sPosLeftBarM.bLimit, 
+	TENGOUNAPIEZA=> TengoUnaPiezaM, RAISE=> GVL_StackBox.sPosLeftBarM.bRaise, 
+	CLAMP=> GVL_StackBox.sPosLeftBarM.bClamp );]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Positioner">
+      <LineId Id="531" Count="4" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="506" Count="0" />
+      <LineId Id="508" Count="0" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="512" Count="0" />
+      <LineId Id="515" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="517" Count="4" />
+      <LineId Id="80" Count="2" />
+      <LineId Id="525" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

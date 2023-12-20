@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_FinDeCiclo" Id="{d63d9367-255f-4c24-a9b7-23ae1156f199}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_FinDeCiclo
+VAR
+	// Memorias que permiten que la fábrica se vaya apagando progresivamente
+	bMemoriaP1 : BOOL;
+	bMemoriaP2 : BOOL;
+	bMemoriaP3 : BOOL;
+	bMemoriaP4 : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+(* Cuando el operario pulsa fin de ciclo, se deja de ejecutar el bON de Main, saltando únicamente a este PRG que controla el apagado 
+progresivo de los diferentes POUs. Para ello, comprueba el valor de las memorias colocadas por todo el proceso, unas superpuestas a las otras,
+permitiendo encender y apagar cada estación en función de su estado de procesamiento *)
+
+	
+GVL_General.sBeltConveyor.bSortingCintaInicial := FALSE;
+GVL_General.sBeltConveyor.bSortingCintaEntrada := FALSE;	
+
+
+IF POU_Contadores.iCintaProcesando > 0 THEN
+	PRG_OnFabrica();
+	PRG_ProcesoEntrada();
+	bMemoriaP1 := TRUE;
+ELSE
+	bMemoriaP1 := FALSE;
+END_IF
+
+IF POU_Contadores.iStackBoxProcesando > 0 OR bMemoriaP1 THEN
+	PRG_PickAndPlace();
+	PRG_Positioner();
+	PRG_Parada();
+	bMemoriaP2 := TRUE;
+ELSE
+	bMemoriaP2 := FALSE;
+END_IF
+
+IF POU_Contadores.iCajaProcesando > 0 OR bMemoriaP2 THEN	
+	PRG_Turntable();
+	bMemoriaP3 := TRUE;
+ELSE
+	bMemoriaP3 := FALSE;
+END_IF
+	
+IF POU_Contadores.iProcesandoCintas > 0 OR bMemoriaP3 THEN
+	PRG_Almacen();
+	bMemoriaP4 := TRUE;
+ELSE
+	bMemoriaP4 := FALSE;
+END_IF	
+
+IF POU_Contadores.bGuardandoCaja OR bMemoriaP4 THEN
+	PRG_Almacen();
+	GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen1 := TRUE;
+	GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen2 := TRUE;
+	GVL_ProcesoPallet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;
+ELSE
+	GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen1 := FALSE;
+	GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen2 := FALSE;
+	GVL_ProcesoPallet.sRollerConveyor.bCurvedRollerAlmacen := FALSE;
+END_IF
+
+IF POU_Contadores.iStackBoxProcesando = 0 THEN
+	GVL_General.sBeltConveyor.bCintaAzul1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde1	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal1 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaAzul2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaVerde2 	:= FALSE;
+	GVL_General.sBeltConveyor.bCintaMetal2 	:= FALSE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := FALSE;
+ELSE
+	GVL_General.sBeltConveyor.bCintaAzul1 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaVerde1	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaMetal1 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaAzul2 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaVerde2 	:= TRUE;
+	GVL_General.sBeltConveyor.bCintaMetal2 	:= TRUE;
+	GVL_General.sBeltConveyor.bSortingCintaDistribucion := TRUE;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_FinDeCiclo">
+      <LineId Id="1621" Count="0" />
+      <LineId Id="1551" Count="1" />
+      <LineId Id="1622" Count="0" />
+      <LineId Id="1553" Count="3" />
+      <LineId Id="1623" Count="0" />
+      <LineId Id="1625" Count="0" />
+      <LineId Id="1559" Count="3" />
+      <LineId Id="1628" Count="1" />
+      <LineId Id="1564" Count="6" />
+      <LineId Id="1630" Count="1" />
+      <LineId Id="1571" Count="4" />
+      <LineId Id="1632" Count="1" />
+      <LineId Id="1577" Count="4" />
+      <LineId Id="1634" Count="1" />
+      <LineId Id="1583" Count="3" />
+      <LineId Id="1588" Count="25" />
+      <LineId Id="1190" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

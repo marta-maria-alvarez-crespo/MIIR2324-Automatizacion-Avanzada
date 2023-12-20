@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_ProcesoPallet" Id="{ed6e88b2-2b23-44c0-8618-d50017000d77}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL	
+	
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sTurnTable: Turntable;
+	{attribute 'OPC.UA.DA.StructuredType' := '1'}
+	sRollerConveyor: RollerConveyor;
+	
+	{attribute 'OPC.UA.DA' := '1'}
+	bDiffuseSensorPaletA	:BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	bDiffuseSensorPaletV	:BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	bDiffuseSensorPaletM	:BOOL;
+	{attribute 'OPC.UA.DA' := '1'}	
+	bDiffuseSensorSalida		:BOOL;
+	
+	{attribute 'OPC.UA.DA' := '1'}
+	iLightArrayEmitterA		:BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	iLightArrayEmitterV		:BOOL;
+	{attribute 'OPC.UA.DA' := '1'}
+	iLightArrayEmitterM		:BOOL; 
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

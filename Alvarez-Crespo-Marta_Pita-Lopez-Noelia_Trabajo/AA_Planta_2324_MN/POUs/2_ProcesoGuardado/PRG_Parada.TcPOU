@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_Parada" Id="{4562e21a-788d-46be-8a5e-d2163f8820b6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Parada
+VAR
+	EstoyBloqueandoA: BOOL;
+	EstoyBloqueandoV: BOOL;
+	EstoyBloqueandoM: BOOL;
+
+	StopBladeA: FB_StopBlade;
+	CintaA: 	FB_Cinta;
+	
+	StopBladeV: FB_StopBlade;
+	CintaV: 	FB_Cinta;
+	
+	StopBladeM: FB_StopBlade;
+	CintaM: 	FB_Cinta;
+	
+	bBloqueoPusherA: BOOL;
+	bBloqueoPusherV: BOOL;
+	bBloqueoPusherM: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Mediante este POU se controla el apagado de las líneas en caso de que comiencen a entrar demasiadas piezas en una misma
+línea. Mediante su llamada, se impide que haya más de 3 piezas siendo procesadas simultáneamente por cada una de las líneas
+del proceso de guardado en cajas. La detención se realiza mediante una llamada a los stopblades que impiden la entrada de
+nuevas piezas a los positioner y, a su vez, detiene la cinta de entrada a cada una de las líneas del proceso, impidiendo que
+se junten dos piezas seguidas, lo que ocasionaría el colapso total de la línea. *)
+
+// SECCIÓN AZUL
+StopBladeA(
+	TENERPIEZA:= PRG_Positioner.TengoUnaPiezaA, ESTOYBLOQUEANDO=> EstoyBloqueandoA, 
+	STOPBLADE=>GVL_StackBox.bStopBladeA1 );
+	
+CintaA(
+	BLOQUEANDO:= EstoyBloqueandoA, SENSOR:= GVL_StackBox.bRReflectiveSensorA2, 
+	CINTA=> GVL_General.sBeltConveyor.bCintaAzul1);
+
+// SECCIÓN VERDE
+StopBladeV(
+	TENERPIEZA:= PRG_Positioner.TengoUnaPiezaV, ESTOYBLOQUEANDO=> EstoyBloqueandoV, 
+	STOPBLADE=>GVL_StackBox.bStopBladeV1 );
+
+CintaV(
+	BLOQUEANDO:= EstoyBloqueandoV, SENSOR:= GVL_StackBox.bRReflectiveSensorV2, 
+	CINTA=> GVL_General.sBeltConveyor.bCintaVerde1);
+
+// SECCIÓN METAL
+StopBladeM(
+	TENERPIEZA:= PRG_Positioner.TengoUnaPiezaM, ESTOYBLOQUEANDO=> EstoyBloqueandoM, 
+	STOPBLADE=>GVL_StackBox.bStopBladeM1 );
+
+CintaM(
+	BLOQUEANDO:= EstoyBloqueandoM, SENSOR:= GVL_StackBox.bRReflectiveSensorM2, 
+	CINTA=> GVL_General.sBeltConveyor.bCintaMetal1);
+
+
+// CONTROL DE ENTRADA	
+
+(* Se tiene en cuenta el llenado de una línea. En caso de que una línea no pueda continuar abarcando
+la entrada de piezas, se impide la activación del pusher correspondiente. (Se puede hacer en un FB, no
+está hecho así porque me estoy muriendo *)
+
+IF (
+	PRG_Positioner.TengoUnaPiezaA AND PRG_PickAndPlace.RobotSeMueveA 
+		AND EstoyBloqueandoA AND NOT GVL_General.sBeltConveyor.bCintaAzul1 ) 
+THEN
+	bBloqueoPusherA := TRUE;
+ELSE
+	bBloqueoPusherA := FALSE;
+END_IF
+
+IF (
+	PRG_Positioner.TengoUnaPiezaV AND PRG_PickAndPlace.RobotSeMueveV 
+		AND EstoyBloqueandoV AND NOT GVL_General.sBeltConveyor.bCintaVerde1 ) 
+THEN
+	bBloqueoPusherV := TRUE;
+ELSE
+	bBloqueoPusherV := FALSE;
+END_IF	
+
+IF (
+	PRG_Positioner.TengoUnaPiezaM AND PRG_PickAndPlace.RobotSeMueveM 
+		AND EstoyBloqueandoM AND NOT GVL_General.sBeltConveyor.bCintaMetal1) 
+THEN
+	bBloqueoPusherM := TRUE;
+ELSE
+	bBloqueoPusherM := FALSE;
+END_IF	
+]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_Parada">
+      <LineId Id="114" Count="0" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="279" Count="1" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="276" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="254" Count="5" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="122" Count="1" />
+      <LineId Id="265" Count="5" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="289" Count="1" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="291" Count="0" />
+      <LineId Id="282" Count="1" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="331" Count="0" />
+      <LineId Id="219" Count="2" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="358" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="363" Count="3" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="361" Count="1" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="369" Count="3" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="300" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

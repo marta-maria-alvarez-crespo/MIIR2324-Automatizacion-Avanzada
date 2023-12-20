@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_OnFabrica" Id="{0cb7f3fa-823d-4e17-9c09-7f7283f8c97d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_OnFabrica
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Este PRG activa las cintas de la fábrica necesarias para el funcionamiento inicial, y cuyo valor no variará a lo largo del proceso *)
+
+GVL_General.sBeltConveyor.bSortingCintaInicial := TRUE;
+GVL_General.sBeltConveyor.bSortingCintaEntrada := TRUE;
+GVL_General.sBeltConveyor.bSortingCintaDistribucion := TRUE;
+
+GVL_General.sBeltConveyor.bCintaAzul2 := TRUE;
+GVL_General.sBeltConveyor.bCintaVerde2 := TRUE;
+GVL_General.sBeltConveyor.bCintaMetal2 := TRUE;
+
+GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen1 := TRUE;
+GVL_ProcesoPallet.sRollerConveyor.bCurvedRollerAlmacen := TRUE;]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_OnFabrica">
+      <LineId Id="83" Count="1" />
+      <LineId Id="64" Count="2" />
+      <LineId Id="71" Count="2" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="79" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

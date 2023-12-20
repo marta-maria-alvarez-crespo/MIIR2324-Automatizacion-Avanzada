@@ -3,20 +3,28 @@
   <POU Name="PRG_PanelDeControl" Id="{4125b4fd-54c0-4476-b867-203b20e49183}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_PanelDeControl
 VAR
+	
+	// FB de cambio de flanco para la detección de las pulsaciones del botón verde
 	tRTrigSacar			: R_TRIG;
-
-	i: INT := 1;
+	
+	// Memoria para la pulsación del paro
 	bReset : BOOL;
+	
+	// Memoria para determinar qué color se está seleccionando en cada momento
 	iSolicitudColor: COLOR;
+	
 END_VAR
 
 VAR_INPUT
+	
+	// Variable que almacena la cantidad de cajas que el operario desea sacar
 	iSolicitud: INT := 0;
+	
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[tRTrigSacar(CLK:= GVL_Almacen.Sacar);
 
-(* Aquí sumamos el número de cajas a sacar, que nunca puede ser mayor de las que hay *)
+(* Aquí sumamos el número de cajas a sacar por cada pulsación del botón verde *)
 
 IF tRTrigSacar.Q THEN
 	iSolicitud := iSolicitud + 1;
@@ -29,11 +37,11 @@ IF GVL_Almacen.bReset THEN
 END_IF
 
 IF bReset AND PRG_RetiradaAlmacen.SELECCION > 2 THEN
-		iSolicitud := 1;
+	iSolicitud := 1;
 END_IF
 
 
-(* Rosca de selección del tipo de caja *)
+(* Rosca de selección del tipo de caja. Activa y desactiva los LEDs correspondientes y almacena en una memoria qué solicitud se está haciendo *)
 	
 IF GVL_Almacen.sSelector.StateAzul THEN
 	GVL_Almacen.LedAzul := TRUE;

@@ -56,89 +56,89 @@ CASE CPICKANDPLACE OF
 	
 	PICKANDPLACE_ESPERA:
 	(* La maquina esta esperando a que sea su turno para funcionar *)
-	
-	IF bRTrigDiffSensorPyP.Q THEN
-		CPICKANDPLACE := PICKANDPLACE_DETECCION;
-	END_IF
+		
+		IF bRTrigDiffSensorPyP.Q THEN
+			CPICKANDPLACE := PICKANDPLACE_DETECCION;
+		END_IF
 
 	
 	PICKANDPLACE_DETECCION:
 	(* Cuando se detecta un LID posicionado, se baja el brazo hasta su detección *)
-	
-	ROBOTSEMUEVE := TRUE;
-	IF NOT CONTADOR.Q THEN
-		MOVERZ := TRUE;
-		CPICKANDPLACE := PICKANDPLACE_AGARRE;
-	END_IF
-	
+		
+		ROBOTSEMUEVE := TRUE;
+		IF NOT CONTADOR.Q THEN
+			MOVERZ := TRUE;
+			CPICKANDPLACE := PICKANDPLACE_AGARRE;
+		END_IF
+		
 	
 	PICKANDPLACE_AGARRE: 
 	(* Se agarra el LID detectado una vez detenido el movimiento de Z y se sube el brazo de nuevo *)
 	
-	IF bRTrigDetected.Q THEN
-		AGARRAR := TRUE;
-		MOVERZ := FALSE;
-		CPICKANDPLACE := PICKANDPLACE_GIRO;	
-	END_IF
-	
-	
+		IF bRTrigDetected.Q THEN
+			AGARRAR := TRUE;
+			MOVERZ := FALSE;
+			CPICKANDPLACE := PICKANDPLACE_GIRO;	
+		END_IF
+		
+		
 	PICKANDPLACE_GIRO:
 	(* Se comprueba que el brazo está bien posicionado y se rota hacia la sección de llenado de cajas *)
-	
-	IF bFTrigMovingZ.Q THEN
-		ROTARCCW := TRUE;
-	END_IF
-	
-	IF bFTrigRotating.Q THEN
-		ROTARCCW := FALSE;
-		CPICKANDPLACE := PICKANDPLACE_COLOCACION;	
-	END_IF
+		
+		IF bFTrigMovingZ.Q THEN
+			ROTARCCW := TRUE;
+		END_IF
+		
+		IF bFTrigRotating.Q THEN
+			ROTARCCW := FALSE;
+			CPICKANDPLACE := PICKANDPLACE_COLOCACION;	
+		END_IF
 	
 	
 	PICKANDPLACE_COLOCACION:
 	(* Cuando se posiciona sobre la zona de llenado de la caja, se estira para achinar dentro *)
 	
-	MOVERX := TRUE;
-	
-	IF bFTrigMovingX.Q THEN
-		CPICKANDPLACE := PICKANDPLACE_DESCENSO;
-	END_IF
+		MOVERX := TRUE;
+		
+		IF bFTrigMovingX.Q THEN
+			CPICKANDPLACE := PICKANDPLACE_DESCENSO;
+		END_IF
 	
 	
 	PICKANDPLACE_DESCENSO: 
 	(* Cuando termina de estirarse, vuelve a bajar el brazo para depositar el LID en la caja *)
 	
-	MOVERZ:= TRUE;		
-	IF bFTrigMovingZ.Q THEN
-		CPICKANDPLACE := PICKANDPLACE_LLENADO;
-	END_IF
+		MOVERZ:= TRUE;		
+		IF bFTrigMovingZ.Q THEN
+			CPICKANDPLACE := PICKANDPLACE_LLENADO;
+		END_IF
 	
 	
 	PICKANDPLACE_LLENADO:
 	(* Cuando se termina de mover en Z, deposita el LID en la caja abriendo el Gripper y sube a su posicion 0 *)
 	
-	AGARRAR := FALSE;	
-	MOVERZ := FALSE;
-	
-	IF tRecogidaBrazo.Q THEN
-		MOVERX := FALSE;	
-	END_IF	
-	
-	IF bFTrigMovingX.Q THEN
-		CPICKANDPLACE := PICKANDPLACE_ORIGEN;	
-	END_IF	
+		AGARRAR := FALSE;	
+		MOVERZ := FALSE;
+		
+		IF tRecogidaBrazo.Q THEN
+			MOVERX := FALSE;	
+		END_IF	
+		
+		IF bFTrigMovingX.Q THEN
+			CPICKANDPLACE := PICKANDPLACE_ORIGEN;	
+		END_IF	
 	
 		
 	PICKANDPLACE_ORIGEN:
 	(* El brazo vuelve a su posición inicial e inicia un nuevo ciclo *)
 
-	ROTARCW := TRUE;	
-	
-	IF bFTrigRotating.Q THEN 
-		ROTARCW := FALSE;
-		ROBOTSEMUEVE := FALSE;
-		CPICKANDPLACE := PICKANDPLACE_ESPERA;
-	END_IF
+		ROTARCW := TRUE;	
+		
+		IF bFTrigRotating.Q THEN 
+			ROTARCW := FALSE;
+			ROBOTSEMUEVE := FALSE;
+			CPICKANDPLACE := PICKANDPLACE_ESPERA;
+		END_IF
 		
 END_CASE]]></ST>
     </Implementation>

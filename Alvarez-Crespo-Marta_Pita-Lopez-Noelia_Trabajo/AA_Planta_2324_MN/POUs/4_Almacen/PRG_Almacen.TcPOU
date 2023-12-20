@@ -3,24 +3,37 @@
   <POU Name="PRG_Almacen" Id="{1101874a-6a42-4c7a-9ad2-e9048f62be9e}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_Almacen
 VAR
+	
+	// Variables de control para conocer el estado de la máquina y permitir su coordinación con el proceso de retirada del almacén
+	bEstoyLleno: BOOL;
+	bAlmacenOcupado : BOOL;
+	bAlmacenGuardando: BOOL;
+	
+	// Variables para almacenar la posición de almacenamiento y para el control del FOR
 	iPosicion : INT;
 	i: INT := 1;
-	bAlmacenOcupado : BOOL;
-	ALMACEN: INT;
+	
+	// VALORES DEL CASE
+	ALMACEN: CALMACENAMIENTO;
+	
+	// Almacenamiento del tipo de caja almacenado para su escritura en el array
+	LECTURA: COLOR;
+	
+	// Function Blocks de cambios de flanco, timers...
 	fTrigRRefSensorAlmacen	: F_TRIG;
 	fTrigLift				: F_TRIG;
 	fTrigMovingX			: F_TRIG;
-	LECTURA: COLOR;
-	bEstoyLleno: BOOL;
-	tTimerRack : TON;
+	tTimerRack 				: TON;
 
-	bAlmacenGuardando: BOOL;
 END_VAR
 
 VAR_INPUT
+	
+	// Almacenamiento de la cantidad de cajas de cada color
 	iCantidadAzul : INT;
 	iCantidadVerde : INT;
 	iCantidadMetal : INT;
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -29,17 +42,21 @@ fTrigLift(CLK:= GVL_Almacen.sStackCraneRack.MovingZ);
 fTrigMovingX(CLK:= GVL_Almacen.sStackCraneRack.MovingX);
 tTimerRack(IN:=GVL_Almacen.sStackCraneRack.MiddleLimit, PT:=T#1S);
 
+(* Este PRG se encarga de gestionar el almacenamiento en las estanterías. Para ello, comprueba si hay una caja lista para ser almacenada a través del resultado 
+devuelto por el VisualSensor y la comprobación de que el almacén no esté realizando otras tareas en ese momento *)
 
 IF GVL_Almacen.iVisionSensorAlmacen > 0 AND (bAlmacenOcupado OR PRG_RetiradaAlmacen.AlmacenSacando)THEN
-	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := FALSE;
+	GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen2 := FALSE;
 ELSE
-	GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := TRUE;
+	GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen2 := TRUE;
 END_IF
 
 
+(* Para ello, se define un CASE que realiza las diferentes lecturas y actuaciones necesarias para el correcto almacenamiento de las cajas *)
+
 CASE ALMACEN OF
 	
-	0:
+	CALMACEN_ESPERA:
 	(* Colocamos el almacen en posición de espera *)
 		
 		IF NOT PRG_RetiradaAlmacen.AlmacenSacando THEN
@@ -54,55 +71,56 @@ CASE ALMACEN OF
 			IF GVL_Almacen.sStackCraneRack.RightLimit THEN
 				bAlmacenGuardando := FALSE;
 				bAlmacenOcupado := FALSE;
-				ALMACEN := 1;
+				ALMACEN := CALMACEN_MONTARPALLET;
 			END_IF
 		END_IF
 	
-	1:
+	CALMACEN_MONTARPALLET:
 	(* Esperamos a montar el palet en el almacén *)
 	
-		IF GVL_Almacen.iVisionSensorAlmacen > 0 AND NOT PRG_RetiradaAlmacen.AlmacenSacando THEN
-			i:= 0;
-			bAlmacenGuardando := TRUE;
-			LECTURA := DINT_TO_COLOR(ENTRADA:= GVL_Almacen.iVisionSensorAlmacen);
-			GVL_Almacen.bLoadingConveyor := TRUE;
-		END_IF
-		
-		IF fTrigRRefSensorAlmacen.Q THEN
-			bAlmacenOcupado := TRUE;
-			GVL_Almacen.bLoadingConveyor := FALSE;
-			GVL_Almacen.sStackCraneRack.Lift:= TRUE;
-		END_IF
-		
-		IF fTrigLift.Q THEN
-			GVL_Almacen.sStackCraneRack.Right := FALSE;
-		END_IF
-		
-		IF GVL_Almacen.sStackCraneRack.MiddleLimit THEN
-			ALMACEN := 2;
-		END_IF
+		IF NOT PRG_RetiradaAlmacen.AlmacenSacando THEN	
+			IF GVL_Almacen.iVisionSensorAlmacen > 0  THEN
+				i:= 0;
+				bAlmacenGuardando := TRUE;
+				LECTURA := DINT_TO_COLOR(ENTRADA:= GVL_Almacen.iVisionSensorAlmacen);
+				GVL_Almacen.bLoadingConveyor := TRUE;
+			END_IF
+			
+			IF fTrigRRefSensorAlmacen.Q THEN
+				bAlmacenOcupado := TRUE;
+				GVL_Almacen.bLoadingConveyor := FALSE;
+				GVL_Almacen.sStackCraneRack.Lift:= TRUE;
+			END_IF
+			
+			IF fTrigLift.Q THEN
+				GVL_Almacen.sStackCraneRack.Right := FALSE;
+			END_IF
+			
+			IF GVL_Almacen.sStackCraneRack.MiddleLimit THEN
+				ALMACEN := CALMACEN_BUSQUEDA;
+			END_IF
+	END_IF
 	
-	
-	2:
+	CALMACEN_BUSQUEDA:
 	(* Una vez colocada la caja en posición, buscamos un sitio donde almacenar *)
 	
 		FOR i := 1 TO 54 BY 1 DO
 			IF	GVL_Almacen.aAlmacen[i] = VACIO THEN
 				iPosicion := i;
 				GVL_Almacen.aAlmacen[i] := LECTURA;
-				ALMACEN := 3;
+				ALMACEN := CALMACEN_GUARDADO;
 				EXIT;
-		END_IF
+			END_IF
 	
 		END_FOR
 	
 		IF i = 55 THEN
 			bEstoyLleno := TRUE;
-			ALMACEN := 4;
+			ALMACEN := CALMACEN_LLENO;
 		END_IF
 	
 	
-	3:
+	CALMACEN_GUARDADO:
 	(* Almacenamos en el sitio indicado *)
 	
 		GVL_Almacen.sStackCraneRack.TargetPosition := iPosicion;
@@ -113,11 +131,11 @@ CASE ALMACEN OF
 		
 		IF GVL_Almacen.sStackCraneRack.LeftLimit THEN
 			GVL_Almacen.sStackCraneRack.Lift := FALSE;
-			ALMACEN := 5;
+			ALMACEN := CALMACEN_ORIGEN;
 		END_IF	
 	
 	
-	5:
+	CALMACEN_ORIGEN:
 	(* Devolvemos el almacén a posición de origen *)
 	
 		IF fTrigLift.Q THEN
@@ -138,20 +156,22 @@ CASE ALMACEN OF
 		END_IF
 		
 		IF GVL_Almacen.sStackCraneRack.MiddleLimit THEN
-			ALMACEN := 0;
+			ALMACEN := CALMACEN_ESPERA;
 		END_IF
 	
 	
-	4:
+	CALMACEN_LLENO:
 	(* Almacen lleno *)
 	
-		GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen2 := FALSE;
-		GVL_ProcesoPalet.sRollerConveyor.bCurvedRollerAlmacen := FALSE;
-		GVL_ProcesoPalet.sRollerConveyor.bRollerAlmacen1 := FALSE;
+		GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen2 := FALSE;
+		GVL_ProcesoPallet.sRollerConveyor.bCurvedRollerAlmacen := FALSE;
+		GVL_ProcesoPallet.sRollerConveyor.bRollerAlmacen1 := FALSE;
 		
 		IF NOT bEstoyLleno THEN
 			ALMACEN := 0;
 		END_IF
+		
+		ALMACEN := CALMACEN_BUSQUEDA;
 	
 END_CASE
 ]]></ST>
@@ -161,10 +181,15 @@ END_CASE
       <LineId Id="225" Count="0" />
       <LineId Id="264" Count="0" />
       <LineId Id="330" Count="0" />
-      <LineId Id="451" Count="1" />
+      <LineId Id="557" Count="0" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="558" Count="0" />
+      <LineId Id="452" Count="0" />
       <LineId Id="456" Count="3" />
       <LineId Id="453" Count="0" />
+      <LineId Id="561" Count="0" />
       <LineId Id="455" Count="0" />
+      <LineId Id="560" Count="0" />
       <LineId Id="363" Count="0" />
       <LineId Id="115" Count="0" />
       <LineId Id="408" Count="0" />
@@ -186,6 +211,7 @@ END_CASE
       <LineId Id="143" Count="0" />
       <LineId Id="150" Count="0" />
       <LineId Id="147" Count="1" />
+      <LineId Id="512" Count="0" />
       <LineId Id="151" Count="0" />
       <LineId Id="156" Count="0" />
       <LineId Id="490" Count="0" />
@@ -243,6 +269,8 @@ END_CASE
       <LineId Id="359" Count="0" />
       <LineId Id="350" Count="8" />
       <LineId Id="349" Count="0" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="535" Count="0" />
       <LineId Id="313" Count="0" />
       <LineId Id="133" Count="0" />
       <LineId Id="198" Count="0" />

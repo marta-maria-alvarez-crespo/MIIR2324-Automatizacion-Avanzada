@@ -21,6 +21,9 @@
     <Compile Include="DUTs\COLOR.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\DefinicionCases\CALMACENAMIENTO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\DefinicionCases\CINTA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -31,6 +34,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\DefinicionCases\CONDICIONESPARO.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\DefinicionCases\CRETIRADA.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\DefinicionCases\CTURNTABLE.TcDUT">
@@ -67,7 +73,7 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
-    <Compile Include="GVLs\GVL_ProcesoPalet.TcGVL">
+    <Compile Include="GVLs\GVL_ProcesoPallet.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
@@ -85,16 +91,16 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\0_ControlEncendido\POU_FinDeCiclo.TcPOU">
+    <Compile Include="POUs\0_ControlEncendido\PRG_FinDeCiclo.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\0_ControlEncendido\POU_OnFabrica.TcPOU">
+    <Compile Include="POUs\0_ControlEncendido\PRG_OnFabrica.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\0_ControlEncendido\POU_SetaEmergencia.TcPOU">
+    <Compile Include="POUs\0_ControlEncendido\PRG_SetaEmergencia.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\0_ControlEncendido\POU_StopBladePyP.TcPOU">
+    <Compile Include="POUs\0_ControlEncendido\PRG_StopBladePyP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\3_ProcesoPalet\PRG_Cintas.TcPOU">
@@ -104,9 +110,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Almacen\DINT_TO_COLOR.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\4_Almacen\COLOR_TO_DINT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\4_Almacen\PRG_Almacen.TcPOU">
@@ -127,7 +130,7 @@
     <Compile Include="POUs\1_ProcesoEntrada\FB_Pusher.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\1_ProcesoEntrada\POU_ProcesoEntrada.TcPOU">
+    <Compile Include="POUs\1_ProcesoEntrada\PRG_ProcesoEntrada.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\2_ProcesoGuardado\FB_Cinta.TcPOU">
@@ -142,13 +145,13 @@
     <Compile Include="POUs\2_ProcesoGuardado\FB_StopBlade.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\2_ProcesoGuardado\POU_Parada.TcPOU">
+    <Compile Include="POUs\2_ProcesoGuardado\PRG_Parada.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\2_ProcesoGuardado\POU_PickAndPlace.TcPOU">
+    <Compile Include="POUs\2_ProcesoGuardado\PRG_PickAndPlace.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\2_ProcesoGuardado\POU_PositionerAzul.TcPOU">
+    <Compile Include="POUs\2_ProcesoGuardado\PRG_Positioner.TcPOU">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="PRG_ProcesoEntrada" Id="{af995422-f2b4-4fc9-9e2b-ddf55a5fe502}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_ProcesoEntrada
+VAR
+	PusherAzul: FB_Pusher;
+	PusherVerde: FB_Pusher;
+	PusherMetal: FB_Pusher;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*Este POU se encarga de controlar la parte inicial del proceso, donde se separan los materiales de 
+entrada por tipo. Para ello, se activa el proceso con el botón principal (botón MARCHA) y comienzan 
+a moverse las diferentes cintas, activando los pushers cuando la detección corresponda con el objeto 
+deseado. Si el sensor visual detecta el objeto configurado en sus características, entonces se pasa 
+a detectar el flanco de bajada del Diffuse Sensor, activando los pushers en el momento adecuado *)
+
+// SECCIÓN AZUL
+PusherAzul(
+	SENSOR:= GVL_Sorting.bDiffuseSensorA, FRONTAL:= GVL_Sorting.sPusherA.PusherFrontLimit, 
+	CAMARA:= GVL_Sorting.bVisionSensorA, BLOQUEOPUSHER := PRG_Parada.bBloqueoPusherA, PUSHER=> GVL_Sorting.sPusherA.Pusher);
+
+// SECCIÓN VERDE
+PusherVerde(
+	SENSOR:= GVL_Sorting.bDiffuseSensorV, FRONTAL:= GVL_Sorting.sPusherV.PusherFrontLimit, 
+	CAMARA:= GVL_Sorting.bVisionSensorV, BLOQUEOPUSHER := PRG_Parada.bBloqueoPusherV, PUSHER=> GVL_Sorting.sPusherV.Pusher);
+
+// SECCIÓN METAL
+PusherMetal(
+	SENSOR:= GVL_Sorting.bDiffuseSensorM, FRONTAL:= GVL_Sorting.sPusherM.PusherFrontLimit, 
+	CAMARA:= GVL_Sorting.bVisionSensorM, BLOQUEOPUSHER := PRG_Parada.bBloqueoPusherM, PUSHER=> GVL_Sorting.sPusherM.Pusher);]]></ST>
+    </Implementation>
+    <LineIds Name="PRG_ProcesoEntrada">
+      <LineId Id="47" Count="0" />
+      <LineId Id="182" Count="2" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="148" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="164" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

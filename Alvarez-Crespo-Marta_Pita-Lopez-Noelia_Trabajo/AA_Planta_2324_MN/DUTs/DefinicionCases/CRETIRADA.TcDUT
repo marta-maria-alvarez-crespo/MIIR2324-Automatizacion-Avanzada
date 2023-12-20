@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="CRETIRADA" Id="{14cd31f8-a327-4703-a68c-12fd4015fdf9}">
+    <Declaration><![CDATA[{attribute 'strict'}
+TYPE CRETIRADA :
+(
+	CRETIRADA_ESPERA,
+	CRETIRADA_BUSQUEDA,
+	CRETIRADA_RECOGIDA,
+	CRETIRADA_TRANSPORTE,
+	CRETIRADA_COLOCACION,
+	CRETIRADA_PARTIDA
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

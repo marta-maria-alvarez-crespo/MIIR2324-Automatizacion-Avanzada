@@ -29,15 +29,15 @@ END_VAR
 feRRefSensorSortingA(CLK:= GVL_StackBox.bRReflectiveSensorA1);
 feRRefSensorSortingV (CLK:= GVL_StackBox.bRReflectiveSensorV1); 
 reDifSensorSortingM (CLK:= GVL_Sorting.bDiffuseSensorM);
-tFTrigDiffuseSensor(CLK:= GVL_ProcesoPalet.bDiffuseSensorSalida);
+tFTrigDiffuseSensor(CLK:= GVL_ProcesoPallet.bDiffuseSensorSalida);
 fTrigRRefSensorAlmacen(CLK:= GVL_Almacen.bRRflexSensorAlmacen);
-tFTrigEmitterA(CLK:= GVL_ProcesoPalet.iLightArrayEmitterA);
-tFTrigEmitterV(CLK:= GVL_ProcesoPalet.iLightArrayEmitterV);
-tFTrigEmitterM(CLK:= GVL_ProcesoPalet.iLightArrayEmitterM);
+tFTrigEmitterA(CLK:= GVL_ProcesoPallet.iLightArrayEmitterA);
+tFTrigEmitterV(CLK:= GVL_ProcesoPallet.iLightArrayEmitterV);
+tFTrigEmitterM(CLK:= GVL_ProcesoPallet.iLightArrayEmitterM);
 
-fFtrigRobotSeMueveA(CLK:= POU_PickAndPlace.RobotSeMueveA);
-fFtrigRobotSeMueveV(CLK:= POU_PickAndPlace.RobotSeMueveV);
-fFtrigRobotSeMueveM(CLK:= POU_PickAndPlace.RobotSeMueveM);
+fFtrigRobotSeMueveA(CLK:= PRG_PickAndPlace.RobotSeMueveA);
+fFtrigRobotSeMueveV(CLK:= PRG_PickAndPlace.RobotSeMueveV);
+fFtrigRobotSeMueveM(CLK:= PRG_PickAndPlace.RobotSeMueveM);
 
 // SECCION 1 
 (* Sumamos 1 al contador si se comienza a procesar una pieza y se resta 1 cuando se termina de procesar *)

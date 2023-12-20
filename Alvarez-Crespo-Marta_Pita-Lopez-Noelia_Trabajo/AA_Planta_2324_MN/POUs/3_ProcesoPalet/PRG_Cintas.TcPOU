@@ -9,27 +9,27 @@ END_VAR
       <ST><![CDATA[
 (* Dependiendo de las detecciones de los sensores, se activarán según qué líneas*)
 
-IF NOT POU_PickAndPlace.CajaLlenaA THEN
-	IF GVL_ProcesoPalet.iLightArrayEmitterA THEN
-		GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1 := FALSE;
+IF NOT PRG_PickAndPlace.CajaLlenaA THEN
+	IF GVL_ProcesoPallet.iLightArrayEmitterA THEN
+		GVL_ProcesoPallet.sRollerConveyor.bRollerAzul1 := FALSE;
 	ELSE
-		GVL_ProcesoPalet.sRollerConveyor.bRollerAzul1 := TRUE;
+		GVL_ProcesoPallet.sRollerConveyor.bRollerAzul1 := TRUE;
 	END_IF
 END_IF
 
-IF NOT POU_PickAndPlace.CajaLlenaV THEN
-	IF GVL_ProcesoPalet.iLightArrayEmitterV THEN
-		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := FALSE;
+IF NOT PRG_PickAndPlace.CajaLlenaV THEN
+	IF GVL_ProcesoPallet.iLightArrayEmitterV THEN
+		GVL_ProcesoPallet.sRollerConveyor.bRollerVerde1 := FALSE;
 	ELSE
-		GVL_ProcesoPalet.sRollerConveyor.bRollerVerde1 := TRUE;
+		GVL_ProcesoPallet.sRollerConveyor.bRollerVerde1 := TRUE;
 	END_IF
 END_IF
 
-IF NOT POU_PickAndPlace.CajaLlenaM THEN
-	IF GVL_ProcesoPalet.iLightArrayEmitterM THEN
-		GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1 := FALSE;
+IF NOT PRG_PickAndPlace.CajaLlenaM THEN
+	IF GVL_ProcesoPallet.iLightArrayEmitterM THEN
+		GVL_ProcesoPallet.sRollerConveyor.bRollerMetal1 := FALSE;
 	ELSE
-		GVL_ProcesoPalet.sRollerConveyor.bRollerMetal1 := TRUE;
+		GVL_ProcesoPallet.sRollerConveyor.bRollerMetal1 := TRUE;
 	END_IF
 END_IF]]></ST>
     </Implementation>
